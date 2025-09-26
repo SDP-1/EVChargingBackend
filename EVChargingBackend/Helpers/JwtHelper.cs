@@ -13,8 +13,8 @@
             // Create claims based on user data
             var claims = new[]
             {
-                new Claim("username", username),
-                new Claim("role", role)
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role)
             };
 
             // Create a signing key using the provided secret key
@@ -23,8 +23,8 @@
 
             // Create the JWT token
             var token = new JwtSecurityToken(
-                issuer: "yourdomain.com",
-                audience: "yourdomain.com",
+                issuer: "http://localhost:5033",
+                audience: "http://localhost:3000",
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),  // Token expiration time
                 signingCredentials: creds
