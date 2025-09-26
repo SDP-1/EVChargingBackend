@@ -30,5 +30,68 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "CancelReservation",
+    "RelativePath": "api/Booking/cancel/{bookingId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "CreateReservation",
+    "RelativePath": "api/Booking/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "EVChargingBackend.DTOs.CreateBookingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "DebugClaims",
+    "RelativePath": "api/Booking/debug",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "UpdateReservation",
+    "RelativePath": "api/Booking/update/{bookingId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "EVChargingBackend.DTOs.UpdateBookingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

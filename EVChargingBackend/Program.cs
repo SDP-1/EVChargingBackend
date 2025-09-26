@@ -17,6 +17,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 
 // Register services for User Management and JWT Authentication
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -27,9 +28,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidIssuer = "http://localhost:5033",//  backend API runs on port 5000
             ValidAudience = "http://localhost:3000",// Assuming you plan to have your frontend running on port 3000 (common for React apps)
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
+
         };
     });
+
 
 builder.Services.AddControllers();
 
@@ -37,6 +40,7 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+//app.UseDeveloperExceptionPage();
 app.MapControllers();
 
 app.Run();
