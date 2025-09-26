@@ -12,7 +12,8 @@ namespace EVChargingBackend.Services
         Task<Booking> GetReservationByIdAsync(string bookingId);
         Task<Booking> ConfirmBookingAsync(string bookingId, string stationOperatorUsername);
         Task<Booking> CompleteBookingAsync(string bookingId, string stationOperatorUsername);
-
+        Task<List<Booking>> GetBookingsByUserIdAsync(string userId);
+        Task<List<Booking>> GetAllBookingsAsync();
     }
 
     public class BookingService : IBookingService
@@ -127,7 +128,18 @@ namespace EVChargingBackend.Services
             return await GetReservationByIdAsync(bookingId);
         }
 
+        //get all bookings for a User
+        public async Task<List<Booking>> GetBookingsByUserIdAsync(string userId)
+        {
+            var filter = Builders<Booking>.Filter.Eq(b => b.UserId, userId);
+            return await _bookings.Find(filter).ToListAsync();
+        }
 
+        //get all bookings for a User by Back Office
+        public async Task<List<Booking>> GetAllBookingsAsync()
+        {
+            return await _bookings.Find(_ => true).ToListAsync();
+        }
 
 
     }

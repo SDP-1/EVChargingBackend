@@ -13,7 +13,7 @@
         public string Role { get; set; }        // "Backoffice", "StationOperator", "EVOwner"
 
         [BsonIgnoreIfNull]
-        public string NIC { get; set; }         // Required if Role == "EVOwner"
+        public string? NIC { get; set; }         // Required if Role == "EVOwner"
 
         public bool Active { get; set; } = true; // EVOwner can deactivate; Backoffice can reactivate
     }

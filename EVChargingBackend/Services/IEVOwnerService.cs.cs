@@ -11,5 +11,7 @@ namespace EVChargingBackend.Services
         Task<bool> DeleteEVOwnerAsync(string nic);
         Task<bool> ActivateEVOwnerAsync(string nic);         // Backoffice only
         Task<bool> DeactivateEVOwnerAsync(string nic);       // EVOwner themselves
+        Task<List<User>> GetAllEVOwnersAsync();
+
     }
 }
