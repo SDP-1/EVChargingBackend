@@ -13,8 +13,8 @@
             // Create claims based on user data
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role)
+                new Claim("username", username),
+                new Claim("role", role)
             };
 
             // Create a signing key using the provided secret key

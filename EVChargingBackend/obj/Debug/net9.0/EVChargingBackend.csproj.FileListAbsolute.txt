@@ -46,3 +46,6 @@ E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Deb
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.pdb
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.genruntimeconfig.cache
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\ref\EVChargingBackend.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\DotNetEnv.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\Sprache.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.sourcelink.json
