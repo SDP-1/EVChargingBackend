@@ -10,6 +10,9 @@ namespace EVChargingBackend.Services
         Task<Booking> UpdateReservationAsync(string bookingId, Booking updatedBooking);
         Task<bool> CancelReservationAsync(string bookingId);
         Task<Booking> GetReservationByIdAsync(string bookingId);
+        Task<Booking> ConfirmBookingAsync(string bookingId, string stationOperatorUsername);
+        Task<Booking> CompleteBookingAsync(string bookingId, string stationOperatorUsername);
+
     }
 
     public class BookingService : IBookingService
@@ -85,6 +88,48 @@ namespace EVChargingBackend.Services
         {
             return await _bookings.Find(b => b.Id == ObjectId.Parse(bookingId)).FirstOrDefaultAsync();
         }
+
+        //Confirm Booking by EV/station Operator
+        public async Task<Booking> ConfirmBookingAsync(string bookingId, string stationOperatorUsername)
+        {
+            var booking = await GetReservationByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException("Booking not found");
+
+            // Optionally: check if this operator is allowed to confirm this station
+            // if (booking.StationId != stationAssignedToOperator) throw new UnauthorizedAccessException();
+
+            var filter = Builders<Booking>.Filter.Eq(b => b.Id, ObjectId.Parse(bookingId));
+            var update = Builders<Booking>.Update
+                .Set(b => b.Confirmed, true)
+                .Set(b => b.UpdatedAt, DateTime.UtcNow);
+
+            await _bookings.UpdateOneAsync(filter, update);
+            return await GetReservationByIdAsync(bookingId);
+        }
+
+        // Complete a reservation (mark Completed = true)
+        public async Task<Booking> CompleteBookingAsync(string bookingId, string stationOperatorUsername)
+        {
+            var booking = await GetReservationByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException("Booking not found");
+
+            if (!booking.Confirmed)
+                throw new InvalidOperationException("Booking must be confirmed first.");
+
+            var filter = Builders<Booking>.Filter.Eq(b => b.Id, ObjectId.Parse(bookingId));
+            var update = Builders<Booking>.Update
+                .Set(b => b.Completed, true)
+                .Set(b => b.UpdatedAt, DateTime.UtcNow);
+
+            await _bookings.UpdateOneAsync(filter, update);
+            return await GetReservationByIdAsync(bookingId);
+        }
+
+
+
+
     }
 
 }
