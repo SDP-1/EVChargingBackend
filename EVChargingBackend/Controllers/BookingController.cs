@@ -192,20 +192,35 @@ namespace EVChargingBackend.Controllers
         [HttpGet("{bookingId}")]
         public async Task<IActionResult> GetBookingById(string bookingId)
         {
-            var booking = await _bookingService.GetReservationByIdAsync(bookingId);
-            if (booking == null) return NotFound("Booking not found");
-
-            return Ok(new
+            try
             {
-                BookingId = booking.Id.ToString(),
-                UserId = booking.UserId,
-                StationId = booking.StationId,
-                ReservationDateTime = booking.ReservationDateTime,
-                Approved = booking.Approved,
-                Confirmed = booking.Confirmed,
-                Completed = booking.Completed
-            });
+                var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+                if (booking == null) return NotFound("Booking not found");
+
+                // StationOperator restriction
+                if (User.IsInRole("StationOperator") && !booking.Confirmed)
+                {
+                    return StatusCode(403, new { message = "Booking not confirmed, First Confirm Booking" });
+                }
+
+                return Ok(new
+                {
+                    BookingId = booking.Id.ToString(),
+                    UserId = booking.UserId,
+                    StationId = booking.StationId,
+                    ReservationDateTime = booking.ReservationDateTime,
+                    Approved = booking.Approved,
+                    Confirmed = booking.Confirmed,
+                    Completed = booking.Completed
+                });
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
         }
+
+
 
         // Get all bookings for EVOwner (userId from JWT token)
         [Authorize(Roles = "EVOwner")]

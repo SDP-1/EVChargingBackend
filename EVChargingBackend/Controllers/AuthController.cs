@@ -6,6 +6,7 @@ namespace EVChargingBackend.Controllers
     using EVChargingBackend.Helpers;
     using EVChargingBackend.Models;    // Ensure the User model is being used
     using EVChargingBackend.Services;  // Ensure that IUserService is being used correctly
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
 
@@ -26,10 +27,10 @@ namespace EVChargingBackend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
-            // Normalize role string if needed
+            // Normalize role
             var role = user.Role?.Trim();
 
-            // Only allow known roles
+            // Validate role
             if (role != "Backoffice" && role != "StationOperator" && role != "EVOwner")
                 return BadRequest("Invalid role. Must be Backoffice, StationOperator, or EVOwner.");
 
@@ -37,41 +38,71 @@ namespace EVChargingBackend.Controllers
             if (role == "EVOwner" && string.IsNullOrEmpty(user.NIC))
                 return BadRequest("NIC is required for EVOwner.");
 
-            // Hash the password
+            // Hash password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
-            // Set role to normalized version
+            // Set normalized role
             user.Role = role;
 
+            // Set Active based on role
+            user.Active = role == "Backoffice";  // Backoffice = true, others = false
+
             var createdUser = await _userService.CreateUserAsync(user);
-            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString() });
+            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString(), Active = createdUser.Active });
         }
+
 
 
         // User Login endpoint
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            // Get the user by username
             var user = await _userService.GetUserByUsernameAsync(loginDto.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-            {
                 return Unauthorized("Invalid credentials");
-            }
 
-            // Generate the JWT token with userId included
+            // Only allow login if user is active, unless Backoffice
+            if (user.Role != "Backoffice" && !user.Active)
+                return Unauthorized("Account is not active. Contact Backoffice.");
+
             var token = JwtHelper.GenerateJwtToken(
                 user.Username,
                 user.Role,
-                user.Id.ToString(),// Pass the MongoDB ObjectId
-                user.NIC,  
+                user.Id.ToString(),
+                user.NIC,
                 _configuration["Jwt:SecretKey"]
             );
 
-            return Ok(new
-            {
-                Token = token
-            });
+            return Ok(new { Token = token });
         }
+
+        //activate a evowner or a stationofficer
+        [Authorize(Roles = "Backoffice")]
+        [HttpPost("activate/{userId}")]
+        public async Task<IActionResult> ActivateUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("UserId is required.");
+
+            var success = await _userService.SetUserActiveStatusAsync(userId, true);
+            if (!success) return NotFound("User not found.");
+
+            return Ok(new { Success = success });
+        }
+
+        //deactive a evowner or stationoffice
+        [Authorize(Roles = "Backoffice")]
+        [HttpPost("deactivate/{userId}")]
+        public async Task<IActionResult> DeactivateUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("UserId is required.");
+
+            var success = await _userService.SetUserActiveStatusAsync(userId, false);
+            if (!success) return NotFound("User not found.");
+
+            return Ok(new { Success = success });
+        }
+
     }
 }
