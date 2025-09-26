@@ -1,6 +1,38 @@
 [
   {
     "ContainingType": "EVChargingBackend.Controllers.AuthController",
+    "Method": "ActivateUser",
+    "RelativePath": "api/Auth/activate/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.AuthController",
+    "Method": "DeactivateUser",
+    "RelativePath": "api/Auth/deactivate/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",

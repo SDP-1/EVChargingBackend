@@ -1,7 +1,8 @@
 ﻿// Add the necessary namespaces for MongoDB and Task
-using MongoDB.Driver;
-using EVChargingBackend.Models;  // Assuming the User model is in this namespace
 using System.Threading.Tasks;
+using EVChargingBackend.Models;  // Assuming the User model is in this namespace
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace EVChargingBackend.Services
 {
@@ -10,6 +11,7 @@ namespace EVChargingBackend.Services
     {
         Task<User> CreateUserAsync(User user);
         Task<User> GetUserByUsernameAsync(string username);
+        Task<bool> SetUserActiveStatusAsync(string userId, bool active);
     }
 
     // UserService Implementation
@@ -35,5 +37,14 @@ namespace EVChargingBackend.Services
         {
             return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
         }
+
+        public async Task<bool> SetUserActiveStatusAsync(string userId, bool active)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Id, ObjectId.Parse(userId));
+            var update = Builders<User>.Update.Set(u => u.Active, active);
+            var result = await _users.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0;
+        }
+
     }
 }

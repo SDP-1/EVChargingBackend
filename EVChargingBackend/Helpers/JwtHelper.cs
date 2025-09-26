@@ -31,7 +31,7 @@
                 issuer: "http://localhost:5033",
                 audience: "http://localhost:3000",
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(12),
                 signingCredentials: creds
             );
 
