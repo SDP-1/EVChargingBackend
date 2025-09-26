@@ -207,6 +207,37 @@ namespace EVChargingBackend.Controllers
             });
         }
 
+        // Get all bookings for EVOwner (userId from JWT token)
+        [Authorize(Roles = "EVOwner")]
+        [HttpGet("mybookings")]
+        public async Task<IActionResult> GetMyBookings()
+        {
+            var userId = User.FindFirst("userId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("UserId not found in token.");
+
+            var bookings = await _bookingService.GetBookingsByUserIdAsync(userId);
+            return Ok(bookings);
+        }
+
+        // Backoffice: Get all bookings or bookings for a specific user
+        [Authorize(Roles = "Backoffice")]
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllBookings([FromQuery] string userId = null)
+        {
+            List<Booking> bookings;
+            if (string.IsNullOrEmpty(userId))
+            {
+                bookings = await _bookingService.GetAllBookingsAsync();
+            }
+            else
+            {
+                bookings = await _bookingService.GetBookingsByUserIdAsync(userId);
+            }
+            return Ok(bookings);
+        }
+
+
     }
 
 

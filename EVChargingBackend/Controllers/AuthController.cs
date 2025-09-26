@@ -26,14 +26,23 @@ namespace EVChargingBackend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
-            // Validate NIC for EVOwner role
-            if (user.Role == "EVOwner" && string.IsNullOrEmpty(user.NIC))
+            // Normalize role string if needed
+            var role = user.Role?.Trim();
+
+            // Only allow known roles
+            if (role != "Backoffice" && role != "StationOperator" && role != "EVOwner")
+                return BadRequest("Invalid role. Must be Backoffice, StationOperator, or EVOwner.");
+
+            // NIC required only for EVOwner
+            if (role == "EVOwner" && string.IsNullOrEmpty(user.NIC))
                 return BadRequest("NIC is required for EVOwner.");
 
-            // Hash the password before storing
+            // Hash the password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
-            // Create a new user in MongoDB
+            // Set role to normalized version
+            user.Role = role;
+
             var createdUser = await _userService.CreateUserAsync(user);
             return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString() });
         }
@@ -54,7 +63,8 @@ namespace EVChargingBackend.Controllers
             var token = JwtHelper.GenerateJwtToken(
                 user.Username,
                 user.Role,
-                user.Id.ToString(),                    // Pass the MongoDB ObjectId
+                user.Id.ToString(),// Pass the MongoDB ObjectId
+                user.NIC,  
                 _configuration["Jwt:SecretKey"]
             );
 

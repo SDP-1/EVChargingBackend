@@ -63,5 +63,11 @@ namespace EVChargingBackend.Services
             var result = await _users.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
         }
+
+        public async Task<List<User>> GetAllEVOwnersAsync()
+        {
+            return await _users.Find(u => u.Role == "EVOwner").ToListAsync();
+        }
+
     }
 }

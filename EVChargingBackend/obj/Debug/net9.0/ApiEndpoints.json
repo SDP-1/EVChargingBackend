@@ -49,6 +49,22 @@
   },
   {
     "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "GetAllBookings",
+    "RelativePath": "api/Booking/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
     "Method": "CancelReservation",
     "RelativePath": "api/Booking/cancel/{bookingId}",
     "HttpMethod": "POST",
@@ -123,6 +139,16 @@
   },
   {
     "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "GetMyBookings",
+    "RelativePath": "api/Booking/mybookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
     "Method": "GetBookingQrCode",
     "RelativePath": "api/Booking/qrcode/{bookingId}",
     "HttpMethod": "GET",
@@ -169,7 +195,7 @@
       {
         "Name": "nic",
         "Type": "System.String",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -183,11 +209,21 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "nic",
-        "Type": "System.String",
-        "IsRequired": true
+        "Name": "dto",
+        "Type": "EVChargingBackend.DTOs.NICDto",
+        "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "GetAllEVOwners",
+    "RelativePath": "api/EVOwner/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -199,9 +235,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "nic",
-        "Type": "System.String",
-        "IsRequired": true
+        "Name": "dto",
+        "Type": "EVChargingBackend.DTOs.NICDto",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
