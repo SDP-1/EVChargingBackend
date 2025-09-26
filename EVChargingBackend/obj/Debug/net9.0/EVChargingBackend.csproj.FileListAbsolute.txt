@@ -49,3 +49,8 @@ E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Deb
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\DotNetEnv.dll
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\Sprache.dll
 E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.sourcelink.json
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\QRCoder.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\System.Drawing.Common.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\System.Private.Windows.Core.dll
+E:\delete folder\Y4S1\EAD\assignment\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\runtimes\win\lib\net9.0\Microsoft.Win32.SystemEvents.dll

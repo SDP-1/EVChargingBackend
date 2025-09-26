@@ -4,6 +4,11 @@ using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+//using System.Drawing;
+//using System.Drawing.Imaging;
+//using System.IO;
+
 
 namespace EVChargingBackend.Controllers
 {
@@ -27,9 +32,14 @@ namespace EVChargingBackend.Controllers
             if ((dto.ReservationDateTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
+            // ← Add this to define userId
+            var userId = User.FindFirst("userId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("UserId not found in token.");
+
             var booking = new Booking
             {
-                EVOwnerNIC = dto.EVOwnerNIC,
+                UserId = userId,
                 StationId = dto.StationId,
                 ReservationDateTime = dto.ReservationDateTime
             };
@@ -39,7 +49,7 @@ namespace EVChargingBackend.Controllers
             var response = new BookingResponseDto
             {
                 Id = newBooking.Id.ToString(),
-                EVOwnerNIC = newBooking.EVOwnerNIC,
+                UserId = newBooking.UserId,
                 StationId = newBooking.StationId,
                 ReservationDateTime = newBooking.ReservationDateTime,
                 Approved = newBooking.Approved,
@@ -49,6 +59,7 @@ namespace EVChargingBackend.Controllers
 
             return Ok(response);
         }
+
 
         // Update reservation
         [Authorize(Roles = "Backoffice,EVOwner")]
@@ -73,7 +84,7 @@ namespace EVChargingBackend.Controllers
             var response = new BookingResponseDto
             {
                 Id = updatedBooking.Id.ToString(),
-                EVOwnerNIC = updatedBooking.EVOwnerNIC,
+                UserId = updatedBooking.UserId,
                 StationId = updatedBooking.StationId,
                 ReservationDateTime = updatedBooking.ReservationDateTime,
                 Approved = updatedBooking.Approved,
@@ -114,6 +125,88 @@ namespace EVChargingBackend.Controllers
                 BookingId = bookingId
             });
         }
+
+        //Confirm Booking
+        [Authorize(Roles = "StationOperator")]
+        [HttpPost("confirm/{bookingId}")]
+        public async Task<IActionResult> ConfirmBooking(string bookingId)
+        {
+            var username = User.Identity?.Name; // StationOperator username
+            var booking = await _bookingService.ConfirmBookingAsync(bookingId, username);
+            return Ok(new
+            {
+                BookingId = booking.Id.ToString(),
+                UserId = booking.UserId,
+                StationId = booking.StationId,
+                ReservationDateTime = booking.ReservationDateTime,
+                Approved = booking.Approved,
+                Confirmed = booking.Confirmed,
+                Completed = booking.Completed
+            });
+        }
+
+
+        //Complete Booking
+        [Authorize(Roles = "StationOperator")]
+        [HttpPost("complete/{bookingId}")]
+        public async Task<IActionResult> CompleteBooking(string bookingId)
+        {
+            var username = User.Identity?.Name; // StationOperator username
+            var booking = await _bookingService.CompleteBookingAsync(bookingId, username);
+            return Ok(new
+            {
+                BookingId = booking.Id.ToString(),
+                UserId = booking.UserId,
+                StationId = booking.StationId,
+                ReservationDateTime = booking.ReservationDateTime,
+                Approved = booking.Approved,
+                Confirmed = booking.Confirmed,
+                Completed = booking.Completed
+            });
+        }
+
+
+        // Gen QR code endpoint
+        [Authorize(Roles = "EVOwner")]
+        [HttpGet("qrcode/{bookingId}")]
+        public async Task<IActionResult> GetBookingQrCode(string bookingId)
+        {
+            var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+            if (booking == null) return NotFound("Booking not found");
+            if (!booking.Approved) return BadRequest("Booking is not approved yet.");
+
+            using var qrGenerator = new QRCodeGenerator();
+            var qrData = qrGenerator.CreateQrCode(booking.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
+
+            // Generate PNG bytes directly
+            var qrCodePng = new PngByteQRCode(qrData);
+            byte[] qrBytes = qrCodePng.GetGraphic(20);
+
+            string qrBase64 = Convert.ToBase64String(qrBytes);
+
+            return Ok(new { BookingId = booking.Id.ToString(), QrCodeBase64 = qrBase64 });
+        }
+
+        //get booking by Id
+        [Authorize(Roles = "StationOperator,Backoffice,EVOwner")]
+        [HttpGet("{bookingId}")]
+        public async Task<IActionResult> GetBookingById(string bookingId)
+        {
+            var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+            if (booking == null) return NotFound("Booking not found");
+
+            return Ok(new
+            {
+                BookingId = booking.Id.ToString(),
+                UserId = booking.UserId,
+                StationId = booking.StationId,
+                ReservationDateTime = booking.ReservationDateTime,
+                Approved = booking.Approved,
+                Confirmed = booking.Confirmed,
+                Completed = booking.Completed
+            });
+        }
+
     }
 
 

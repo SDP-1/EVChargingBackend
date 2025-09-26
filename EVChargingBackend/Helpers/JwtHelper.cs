@@ -8,13 +8,15 @@
 
     public static class JwtHelper
     {
-        public static string GenerateJwtToken(string username, string role, string secretKey)
+        // Updated method: now accepts userId (MongoDB ObjectId) and embeds it in the JWT
+        public static string GenerateJwtToken(string username, string role, string userId, string secretKey)
         {
             // Create claims based on user data
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                new Claim("userId", userId)   // <-- MongoDB ObjectId of the user
             };
 
             // Create a signing key using the provided secret key

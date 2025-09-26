@@ -33,8 +33,56 @@
   },
   {
     "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "GetBookingById",
+    "RelativePath": "api/Booking/{bookingId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
     "Method": "CancelReservation",
     "RelativePath": "api/Booking/cancel/{bookingId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "CompleteBooking",
+    "RelativePath": "api/Booking/complete/{bookingId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "ConfirmBooking",
+    "RelativePath": "api/Booking/confirm/{bookingId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -75,6 +123,22 @@
   },
   {
     "ContainingType": "EVChargingBackend.Controllers.BookingController",
+    "Method": "GetBookingQrCode",
+    "RelativePath": "api/Booking/qrcode/{bookingId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.BookingController",
     "Method": "UpdateReservation",
     "RelativePath": "api/Booking/update/{bookingId}",
     "HttpMethod": "PUT",
@@ -89,6 +153,70 @@
       {
         "Name": "dto",
         "Type": "EVChargingBackend.DTOs.UpdateBookingDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "GetByNIC",
+    "RelativePath": "api/EVOwner/{nic}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Activate",
+    "RelativePath": "api/EVOwner/activate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Deactivate",
+    "RelativePath": "api/EVOwner/deactivate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Update",
+    "RelativePath": "api/EVOwner/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updatedOwner",
+        "Type": "EVChargingBackend.Models.User",
         "IsRequired": true
       }
     ],

@@ -1,15 +1,20 @@
-﻿namespace EVChargingBackend.Models;
-
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-public class User
+﻿namespace EVChargingBackend.Models
 {
-    [BsonId]
-    public ObjectId Id { get; set; }
+    using MongoDB.Bson;
+    using MongoDB.Bson.Serialization.Attributes;
 
-    public string Username { get; set; }
-    public string PasswordHash { get; set; } // Store the password hash
-    public string Role { get; set; } // "Backoffice" or "StationOperator"
+    public class User
+    {
+        [BsonId]
+        public ObjectId Id { get; set; }        // still the primary key
+
+        public string Username { get; set; }    // used for login
+        public string PasswordHash { get; set; }
+        public string Role { get; set; }        // "Backoffice", "StationOperator", "EVOwner"
+
+        [BsonIgnoreIfNull]
+        public string NIC { get; set; }         // Required if Role == "EVOwner"
+
+        public bool Active { get; set; } = true; // EVOwner can deactivate; Backoffice can reactivate
+    }
 }
-
