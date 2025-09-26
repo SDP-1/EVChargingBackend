@@ -1,0 +1,39 @@
+﻿// Add the necessary namespaces for MongoDB and Task
+using MongoDB.Driver;
+using EVChargingBackend.Models;  // Assuming the User model is in this namespace
+using System.Threading.Tasks;
+
+namespace EVChargingBackend.Services
+{
+    // IUserService Interface
+    public interface IUserService
+    {
+        Task<User> CreateUserAsync(User user);
+        Task<User> GetUserByUsernameAsync(string username);
+    }
+
+    // UserService Implementation
+    public class UserService : IUserService
+    {
+        private readonly IMongoCollection<User> _users;
+
+        // Constructor to initialize MongoDB connection
+        public UserService(IMongoDatabase database)
+        {
+            _users = database.GetCollection<User>("Users");
+        }
+
+        // Method to create a new user
+        public async Task<User> CreateUserAsync(User user)
+        {
+            await _users.InsertOneAsync(user);
+            return user;
+        }
+
+        // Method to get a user by their username
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await _users.Find(u => u.Username == username).FirstOrDefaultAsync();
+        }
+    }
+}
