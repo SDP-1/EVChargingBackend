@@ -18,6 +18,8 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 // Register services for User Management and JWT Authentication
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IEVOwnerService, EVOwnerService>();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -157,5 +157,69 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "GetByNIC",
+    "RelativePath": "api/EVOwner/{nic}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Activate",
+    "RelativePath": "api/EVOwner/activate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Deactivate",
+    "RelativePath": "api/EVOwner/deactivate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nic",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EVChargingBackend.Controllers.EVOwnerController",
+    "Method": "Update",
+    "RelativePath": "api/EVOwner/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updatedOwner",
+        "Type": "EVChargingBackend.Models.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

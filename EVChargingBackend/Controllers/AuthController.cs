@@ -16,7 +16,6 @@ namespace EVChargingBackend.Controllers
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
 
-        // Constructor to inject IUserService and IConfiguration
         public AuthController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
@@ -27,13 +26,18 @@ namespace EVChargingBackend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] User user)
         {
+            // Validate NIC for EVOwner role
+            if (user.Role == "EVOwner" && string.IsNullOrEmpty(user.NIC))
+                return BadRequest("NIC is required for EVOwner.");
+
             // Hash the password before storing
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash); // Correct usage
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
             // Create a new user in MongoDB
             var createdUser = await _userService.CreateUserAsync(user);
-            return Ok(new { Username = createdUser.Username, Role = createdUser.Role });
+            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString() });
         }
+
 
         // User Login endpoint
         [HttpPost("login")]
@@ -41,14 +45,23 @@ namespace EVChargingBackend.Controllers
         {
             // Get the user by username
             var user = await _userService.GetUserByUsernameAsync(loginDto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash)) // Correct usage
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid credentials");
             }
 
-            // Generate the JWT token
-            var token = JwtHelper.GenerateJwtToken(user.Username, user.Role, _configuration["Jwt:SecretKey"]);
-            return Ok(new { Token = token });
+            // Generate the JWT token with userId included
+            var token = JwtHelper.GenerateJwtToken(
+                user.Username,
+                user.Role,
+                user.Id.ToString(),                    // Pass the MongoDB ObjectId
+                _configuration["Jwt:SecretKey"]
+            );
+
+            return Ok(new
+            {
+                Token = token
+            });
         }
     }
 }

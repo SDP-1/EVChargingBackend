@@ -32,9 +32,14 @@ namespace EVChargingBackend.Controllers
             if ((dto.ReservationDateTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
+            // ← Add this to define userId
+            var userId = User.FindFirst("userId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("UserId not found in token.");
+
             var booking = new Booking
             {
-                EVOwnerNIC = dto.EVOwnerNIC,
+                UserId = userId,
                 StationId = dto.StationId,
                 ReservationDateTime = dto.ReservationDateTime
             };
@@ -44,7 +49,7 @@ namespace EVChargingBackend.Controllers
             var response = new BookingResponseDto
             {
                 Id = newBooking.Id.ToString(),
-                EVOwnerNIC = newBooking.EVOwnerNIC,
+                UserId = newBooking.UserId,
                 StationId = newBooking.StationId,
                 ReservationDateTime = newBooking.ReservationDateTime,
                 Approved = newBooking.Approved,
@@ -54,6 +59,7 @@ namespace EVChargingBackend.Controllers
 
             return Ok(response);
         }
+
 
         // Update reservation
         [Authorize(Roles = "Backoffice,EVOwner")]
@@ -78,7 +84,7 @@ namespace EVChargingBackend.Controllers
             var response = new BookingResponseDto
             {
                 Id = updatedBooking.Id.ToString(),
-                EVOwnerNIC = updatedBooking.EVOwnerNIC,
+                UserId = updatedBooking.UserId,
                 StationId = updatedBooking.StationId,
                 ReservationDateTime = updatedBooking.ReservationDateTime,
                 Approved = updatedBooking.Approved,
@@ -120,6 +126,7 @@ namespace EVChargingBackend.Controllers
             });
         }
 
+        //Confirm Booking
         [Authorize(Roles = "StationOperator")]
         [HttpPost("confirm/{bookingId}")]
         public async Task<IActionResult> ConfirmBooking(string bookingId)
@@ -129,7 +136,7 @@ namespace EVChargingBackend.Controllers
             return Ok(new
             {
                 BookingId = booking.Id.ToString(),
-                EVOwnerNIC = booking.EVOwnerNIC,
+                UserId = booking.UserId,
                 StationId = booking.StationId,
                 ReservationDateTime = booking.ReservationDateTime,
                 Approved = booking.Approved,
@@ -139,6 +146,7 @@ namespace EVChargingBackend.Controllers
         }
 
 
+        //Complete Booking
         [Authorize(Roles = "StationOperator")]
         [HttpPost("complete/{bookingId}")]
         public async Task<IActionResult> CompleteBooking(string bookingId)
@@ -148,7 +156,7 @@ namespace EVChargingBackend.Controllers
             return Ok(new
             {
                 BookingId = booking.Id.ToString(),
-                EVOwnerNIC = booking.EVOwnerNIC,
+                UserId = booking.UserId,
                 StationId = booking.StationId,
                 ReservationDateTime = booking.ReservationDateTime,
                 Approved = booking.Approved,
@@ -158,7 +166,7 @@ namespace EVChargingBackend.Controllers
         }
 
 
-        // QR code endpoint
+        // Gen QR code endpoint
         [Authorize(Roles = "EVOwner")]
         [HttpGet("qrcode/{bookingId}")]
         public async Task<IActionResult> GetBookingQrCode(string bookingId)
@@ -179,7 +187,7 @@ namespace EVChargingBackend.Controllers
             return Ok(new { BookingId = booking.Id.ToString(), QrCodeBase64 = qrBase64 });
         }
 
-
+        //get booking by Id
         [Authorize(Roles = "StationOperator,Backoffice,EVOwner")]
         [HttpGet("{bookingId}")]
         public async Task<IActionResult> GetBookingById(string bookingId)
@@ -190,7 +198,7 @@ namespace EVChargingBackend.Controllers
             return Ok(new
             {
                 BookingId = booking.Id.ToString(),
-                EVOwnerNIC = booking.EVOwnerNIC,
+                UserId = booking.UserId,
                 StationId = booking.StationId,
                 ReservationDateTime = booking.ReservationDateTime,
                 Approved = booking.Approved,
