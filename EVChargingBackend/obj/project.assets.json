@@ -5936,23 +5936,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Users\\Devinda PS\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\delete folder\\Y4S1\\EAD\\assignment\\EVChargingBackend\\EVChargingBackend\\EVChargingBackend.csproj",
+      "projectUniqueName": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\EVChargingBackend.csproj",
       "projectName": "EVChargingBackend",
-      "projectPath": "E:\\delete folder\\Y4S1\\EAD\\assignment\\EVChargingBackend\\EVChargingBackend\\EVChargingBackend.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "E:\\delete folder\\Y4S1\\EAD\\assignment\\EVChargingBackend\\EVChargingBackend\\obj\\",
+      "projectPath": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\EVChargingBackend.csproj",
+      "packagesPath": "C:\\Users\\Devinda PS\\.nuget\\packages\\",
+      "outputPath": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Devinda PS\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -6041,7 +6041,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

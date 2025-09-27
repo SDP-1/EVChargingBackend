@@ -35,6 +35,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Define the CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowFrontendOrigin", // Give your policy a name
+                      policy =>
+                      {
+                          // Allow requests from your React development server
+                          policy.WithOrigins("http://localhost:5173")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
 
 builder.Services.AddControllers();
 
@@ -42,7 +54,11 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 //app.UseDeveloperExceptionPage();
 app.MapControllers();
+
+// Apply the CORS Policy
+app.UseCors("AllowFrontendOrigin");
 
 app.Run();
