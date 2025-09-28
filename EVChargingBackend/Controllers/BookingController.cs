@@ -1,10 +1,11 @@
-﻿using System.Security.Claims;
+﻿using AutoMapper;
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
+using System.Security.Claims;
 //using System.Drawing;
 //using System.Drawing.Imaging;
 //using System.IO;
@@ -17,10 +18,12 @@ namespace EVChargingBackend.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly IMapper _mapper;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, IMapper mapper)
         {
             _bookingService = bookingService;
+            _mapper = mapper;
         }
 
         // Create reservation, Enforcing token based authentication
@@ -46,16 +49,7 @@ namespace EVChargingBackend.Controllers
 
             var newBooking = await _bookingService.CreateReservationAsync(booking);
 
-            var response = new BookingResponseDto
-            {
-                Id = newBooking.Id.ToString(),
-                UserId = newBooking.UserId,
-                StationId = newBooking.StationId,
-                ReservationDateTime = newBooking.ReservationDateTime,
-                Approved = newBooking.Approved,
-                Confirmed = newBooking.Confirmed,
-                Completed = newBooking.Completed
-            };
+            var response = _mapper.Map<BookingResponseDto>(booking);
 
             return Ok(response);
         }
@@ -81,16 +75,7 @@ namespace EVChargingBackend.Controllers
 
             var updatedBooking = await _bookingService.UpdateReservationAsync(bookingId, booking);
 
-            var response = new BookingResponseDto
-            {
-                Id = updatedBooking.Id.ToString(),
-                UserId = updatedBooking.UserId,
-                StationId = updatedBooking.StationId,
-                ReservationDateTime = updatedBooking.ReservationDateTime,
-                Approved = updatedBooking.Approved,
-                Confirmed = updatedBooking.Confirmed,
-                Completed = updatedBooking.Completed
-            };
+            var response = _mapper.Map<BookingResponseDto>(booking);
 
             return Ok(response);
         }
@@ -133,16 +118,10 @@ namespace EVChargingBackend.Controllers
         {
             var username = User.Identity?.Name; // StationOperator username
             var booking = await _bookingService.ConfirmBookingAsync(bookingId, username);
-            return Ok(new
-            {
-                BookingId = booking.Id.ToString(),
-                UserId = booking.UserId,
-                StationId = booking.StationId,
-                ReservationDateTime = booking.ReservationDateTime,
-                Approved = booking.Approved,
-                Confirmed = booking.Confirmed,
-                Completed = booking.Completed
-            });
+
+            var response = _mapper.Map<BookingResponseDto>(booking);
+
+            return Ok(response);
         }
 
 
@@ -153,16 +132,10 @@ namespace EVChargingBackend.Controllers
         {
             var username = User.Identity?.Name; // StationOperator username
             var booking = await _bookingService.CompleteBookingAsync(bookingId, username);
-            return Ok(new
-            {
-                BookingId = booking.Id.ToString(),
-                UserId = booking.UserId,
-                StationId = booking.StationId,
-                ReservationDateTime = booking.ReservationDateTime,
-                Approved = booking.Approved,
-                Confirmed = booking.Confirmed,
-                Completed = booking.Completed
-            });
+
+            var response = _mapper.Map<BookingResponseDto>(booking);
+
+            return Ok(response);
         }
 
 
@@ -203,16 +176,9 @@ namespace EVChargingBackend.Controllers
                     return StatusCode(403, new { message = "Booking not confirmed, First Confirm Booking" });
                 }
 
-                return Ok(new
-                {
-                    BookingId = booking.Id.ToString(),
-                    UserId = booking.UserId,
-                    StationId = booking.StationId,
-                    ReservationDateTime = booking.ReservationDateTime,
-                    Approved = booking.Approved,
-                    Confirmed = booking.Confirmed,
-                    Completed = booking.Completed
-                });
+                var response = _mapper.Map<BookingResponseDto>(booking);
+
+                return Ok(response);
             }
             catch
             {
