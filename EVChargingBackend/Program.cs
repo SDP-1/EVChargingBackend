@@ -59,13 +59,13 @@ builder.Services.AddAutoMapper(typeof(EVChargingBackend.Mappings.AutoMapping));
 
 var app = builder.Build();
 
+// Apply the CORS Policy
+app.UseCors("AllowFrontendOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 //app.UseDeveloperExceptionPage();
 app.MapControllers();
-
-// Apply the CORS Policy
-app.UseCors("AllowFrontendOrigin");
 
 app.Run();

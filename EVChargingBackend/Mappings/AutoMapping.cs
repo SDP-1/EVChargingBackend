@@ -8,7 +8,6 @@ namespace EVChargingBackend.Mappings
     {
         public AutoMapping()
         {
-
             // Booking Mappings
             CreateMap<Booking, BookingResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
@@ -20,6 +19,12 @@ namespace EVChargingBackend.Mappings
             CreateMap<UpdateBookingDto, Booking>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            // User Mappings
+            CreateMap<User, UserResponseDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
+
+            CreateMap<UserUpdateDto, User>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
