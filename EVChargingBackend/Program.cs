@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;  // For IConfiguration
 using Microsoft.IdentityModel.Tokens;  // For JwtBearerDefaults, TokenValidationParameters
 using MongoDB.Driver;
 using MongoDB.Driver;  // For MongoDB-related functionality
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;  // For encoding the SecretKey
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,7 @@ builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
 builder.Services.AddScoped<IChargingSlotService, ChargingSlotService>();
 
 
-
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -58,13 +59,13 @@ builder.Services.AddAutoMapper(typeof(EVChargingBackend.Mappings.AutoMapping));
 
 var app = builder.Build();
 
+// Apply the CORS Policy
+app.UseCors("AllowFrontendOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 //app.UseDeveloperExceptionPage();
 app.MapControllers();
-
-// Apply the CORS Policy
-app.UseCors("AllowFrontendOrigin");
 
 app.Run();
