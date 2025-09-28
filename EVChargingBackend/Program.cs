@@ -1,8 +1,9 @@
-using MongoDB.Driver;
+using EVChargingBackend.Mappings;
+using EVChargingBackend.Services;  // For IUserService and UserService
 using Microsoft.AspNetCore.Authentication.JwtBearer;  // For JwtBearerDefaults
 using Microsoft.Extensions.Configuration;  // For IConfiguration
 using Microsoft.IdentityModel.Tokens;  // For JwtBearerDefaults, TokenValidationParameters
-using EVChargingBackend.Services;  // For IUserService and UserService
+using MongoDB.Driver;
 using MongoDB.Driver;  // For MongoDB-related functionality
 using System.Text;  // For encoding the SecretKey
 
@@ -49,6 +50,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+//AutoMapper
+builder.Services.AddAutoMapper(typeof(EVChargingBackend.Mappings.AutoMapping));
 
 var app = builder.Build();
 

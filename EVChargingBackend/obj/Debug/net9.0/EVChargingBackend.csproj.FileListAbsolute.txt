@@ -110,3 +110,5 @@ D:\Selef Project\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\refint\EVC
 D:\Selef Project\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.pdb
 D:\Selef Project\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\EVChargingBackend.genruntimeconfig.cache
 D:\Selef Project\EVChargingBackend\EVChargingBackend\obj\Debug\net9.0\ref\EVChargingBackend.dll
+D:\Selef Project\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\AutoMapper.dll
+D:\Selef Project\EVChargingBackend\EVChargingBackend\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
