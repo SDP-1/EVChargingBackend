@@ -6,7 +6,8 @@
     public class User
     {
         [BsonId]
-        public ObjectId Id { get; set; }        // still the primary key
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }   // store as string in C#
 
         public string Username { get; set; }    // used for login
         public string PasswordHash { get; set; }

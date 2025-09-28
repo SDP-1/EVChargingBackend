@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EVChargingBackend.Models;
@@ -25,12 +24,12 @@ namespace EVChargingBackend.Services
 
         public async Task<ChargingStation> UpdateStationAsync(string stationId, ChargingStation updatedStation)
         {
-            var filter = Builders<ChargingStation>.Filter.Eq(s => s.Id, ObjectId.Parse(stationId));
+            var filter = Builders<ChargingStation>.Filter.Eq(s => s.Id, stationId);
             var update = Builders<ChargingStation>.Update
                 .Set(s => s.Name, updatedStation.Name)
                 .Set(s => s.Location, updatedStation.Location)
                 .Set(s => s.Type, updatedStation.Type)
-                .Set(s => s.AvailableSlots, updatedStation.AvailableSlots);
+                .Set(s => s.Active, updatedStation.Active);
 
             await _stations.UpdateOneAsync(filter, update);
             return await _stations.Find(filter).FirstOrDefaultAsync();
@@ -46,7 +45,7 @@ namespace EVChargingBackend.Services
             var activeBookings = await _bookings.Find(activeBookingFilter).AnyAsync();
             if (activeBookings) return false;  // Cannot deactivate
 
-            var filter = Builders<ChargingStation>.Filter.Eq(s => s.Id, ObjectId.Parse(stationId));
+            var filter = Builders<ChargingStation>.Filter.Eq(s => s.Id, stationId);
             var update = Builders<ChargingStation>.Update.Set(s => s.Active, false);
             var result = await _stations.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
@@ -54,7 +53,7 @@ namespace EVChargingBackend.Services
 
         public async Task<ChargingStation> GetStationByIdAsync(string stationId)
         {
-            return await _stations.Find(s => s.Id == ObjectId.Parse(stationId)).FirstOrDefaultAsync();
+            return await _stations.Find(s => s.Id == stationId).FirstOrDefaultAsync();
         }
 
         public async Task<List<ChargingStation>> GetAllStationsAsync()

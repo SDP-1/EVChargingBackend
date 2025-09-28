@@ -6,7 +6,9 @@ namespace EVChargingBackend.Models
     public class ChargingStation
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonIgnoreIfDefault]
+        public string? Id { get; set; }  // store as string in C#
 
         public string Name { get; set; }
         public string Location { get; set; }

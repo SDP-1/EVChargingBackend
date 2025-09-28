@@ -20,10 +20,13 @@ namespace EVChargingBackend.Controllers
 
         [Authorize(Roles = "Backoffice")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] ChargingStation station)
+        public async Task<IActionResult> CreateStation([FromBody] ChargingStation station)
         {
-            var created = await _stationService.CreateStationAsync(station);
-            return Ok(created);
+            if (string.IsNullOrEmpty(station.Name) || string.IsNullOrEmpty(station.Location) || string.IsNullOrEmpty(station.Type))
+                return BadRequest("Name, Location, and Type are required.");
+
+            var createdStation = await _stationService.CreateStationAsync(station);
+            return Ok(createdStation);
         }
 
         [Authorize(Roles = "Backoffice")]

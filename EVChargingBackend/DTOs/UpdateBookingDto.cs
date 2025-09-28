@@ -1,9 +1,5 @@
-﻿namespace EVChargingBackend.DTOs
+﻿public class UpdateBookingDto
 {
-    public class UpdateBookingDto
-    {
-        public string? StationId { get; set; }//? = nullable
-        public DateTime? ReservationDateTime { get; set; } // nullable
-    }
-
+    public string? StationId { get; set; }   // optional
+    public string? SlotId { get; set; }      // optional: new slot id if changing
 }

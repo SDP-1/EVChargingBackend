@@ -32,11 +32,16 @@ namespace EVChargingBackend.Services
 
         public async Task<bool> SetUserActiveStatusAsync(string userId, bool active)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, ObjectId.Parse(userId));
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
             var update = Builders<User>.Update.Set(u => u.Active, active);
             var result = await _users.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
         }
 
+
+        public async Task<List<User>> GetUsersByRoleAsync(string role)
+        {
+            return await _users.Find(u => u.Role == role).ToListAsync();
+        }
     }
 }

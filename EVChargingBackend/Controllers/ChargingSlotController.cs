@@ -2,7 +2,6 @@
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using System;
 using System.Threading.Tasks;
 
@@ -24,29 +23,45 @@ namespace EVChargingBackend.Controllers
         [HttpPost("init/{stationId}/{date}")]
         public async Task<IActionResult> InitializeSlots(string stationId, DateTime date)
         {
-            await _slotService.InitializeDailySlotsAsync(ObjectId.Parse(stationId), date);
+            await _slotService.InitializeDailySlotsAsync(stationId, date);
             return Ok("Daily slots initialized.");
         }
 
         // Get available slots (EV Owner)
-        [Authorize(Roles = "EVOwner")]
+        [Authorize(Roles = "EVOwner,Backoffice")]
         [HttpGet("available/{stationId}/{date}")]
         public async Task<IActionResult> GetAvailableSlots(string stationId, DateTime date)
         {
-            var slots = await _slotService.GetAvailableSlotsAsync(ObjectId.Parse(stationId), date);
+            var slots = await _slotService.GetAvailableSlotsAsync(stationId, date);
             return Ok(slots);
         }
 
-        // Book a slot (EV Owner)
-        [Authorize(Roles = "EVOwner")]
-        [HttpPost("book/{slotId}/{bookingId}")]
-        public async Task<IActionResult> BookSlot(string slotId, string bookingId)
+        [Authorize(Roles = "Backoffice,EVOwner")]
+        [HttpGet("all/{stationId}/{date}")]
+        public async Task<IActionResult> GetAllSlots(string stationId, DateTime date)
         {
-            var evoOwnerId = User.FindFirst("userId")?.Value;
-            if (string.IsNullOrEmpty(evoOwnerId)) return BadRequest("UserId not found in token.");
-
-            var success = await _slotService.BookSlotAsync(ObjectId.Parse(slotId), evoOwnerId, bookingId);
-            return Ok(new { Success = success });
+            var slots = await _slotService.GetAllSlotsAsync(stationId, date); // Returns all slots regardless of IsBooked
+            return Ok(slots);
         }
+
+        [Authorize(Roles = "Backoffice,EVOwner")]
+        [HttpGet("booked/{stationId}/{date}")]
+        public async Task<IActionResult> GetBookedSlots(string stationId, DateTime date)
+        {
+            var slots = await _slotService.GetBookedSlotsAsync(stationId, date);
+            return Ok(slots);
+        }
+
+        // Get a slot by its Id
+        [Authorize(Roles = "EVOwner,Backoffice")]
+        [HttpGet("{slotId}")]
+        public async Task<IActionResult> GetSlotById(string slotId)
+        {
+            var slot = await _slotService.GetSlotByIdAsync(slotId);
+            if (slot == null) return NotFound("Slot not found.");
+            return Ok(slot);
+        }
+
+
     }
 }
