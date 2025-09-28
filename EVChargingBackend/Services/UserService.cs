@@ -6,14 +6,6 @@ using MongoDB.Driver;
 
 namespace EVChargingBackend.Services
 {
-    // IUserService Interface
-    public interface IUserService
-    {
-        Task<User> CreateUserAsync(User user);
-        Task<User> GetUserByUsernameAsync(string username);
-        Task<bool> SetUserActiveStatusAsync(string userId, bool active);
-    }
-
     // UserService Implementation
     public class UserService : IUserService
     {
