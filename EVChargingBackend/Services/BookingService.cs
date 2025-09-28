@@ -129,6 +129,70 @@ namespace EVChargingBackend.Services
             return await _bookings.Find(_ => true).ToListAsync();
         }
 
+        // NEW: Get the count of pending approvals (Backoffice/Operator)
+        public async Task<long> GetPendingApprovalCountAsync()
+        {
+            var filter = Builders<Booking>.Filter.Eq(b => b.Approved, false) &
+                         Builders<Booking>.Filter.Eq(b => b.Canceled, false);
+
+            return await _bookings.CountDocumentsAsync(filter);
+        }
+
+        // Get booking counts for the last N days (for trend chart)
+        public async Task<Dictionary<DateTime, long>> GetBookingTrendAsync(int days = 7)
+        {
+            var sevenDaysAgo = DateTime.UtcNow.Date.AddDays(-days);
+
+            // Filter by bookings that were created in the last N days
+            var filter = Builders<Booking>.Filter.Gte(b => b.CreatedAt, sevenDaysAgo);
+
+            var bookings = await _bookings.Find(filter).ToListAsync();
+
+            var trend = Enumerable.Range(0, days + 1)
+                .Select(offset => DateTime.UtcNow.Date.AddDays(-offset))
+                .ToDictionary(date => date, date => 0L);
+
+            foreach (var booking in bookings)
+            {
+                var day = booking.CreatedAt.Date;
+                if (trend.ContainsKey(day))
+                {
+                    trend[day]++;
+                }
+            }
+
+            // Return sorted by date
+            return trend.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        /// Gets upcoming, non-cancelled, non-completed bookings.
+        /// </summary>
+        public async Task<List<Booking>> GetUpcomingBookingsAsync(string userId = null, string stationId = null, int limit = 5)
+        {
+            var filterBuilder = Builders<Booking>.Filter;
+
+            // Base filter: Not canceled, Not completed, Reservation date is in the future
+            var filter = filterBuilder.Eq(b => b.Canceled, false) &
+                         filterBuilder.Eq(b => b.Completed, false) &
+                         filterBuilder.Gte(b => b.ReservationDateTime, DateTime.UtcNow);
+
+            // Add UserId filter if provided (for EV Owner)
+            if (userId != null)
+            {
+                filter &= filterBuilder.Eq(b => b.UserId, userId);
+            }
+
+            // Add StationId filter if provided (for Station Operator)
+            if (stationId != null)
+            {
+                filter &= filterBuilder.Eq(b => b.StationId, stationId);
+            }
+
+            return await _bookings.Find(filter)
+                                 .SortBy(b => b.ReservationDateTime)
+                                 .Limit(limit)
+                                 .ToListAsync();
+        }
 
     }
 

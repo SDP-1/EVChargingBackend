@@ -43,5 +43,14 @@ namespace EVChargingBackend.Services
         {
             return await _users.Find(u => u.Role == role).ToListAsync();
         }
+
+        // Get count of users with Active=false (pending approval)
+        public async Task<long> GetPendingUserApprovalCountAsync(string role = "EVOwner")
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.Role, role) &
+                         Builders<User>.Filter.Eq(u => u.Active, false);
+
+            return await _users.CountDocumentsAsync(filter);
+        }
     }
 }

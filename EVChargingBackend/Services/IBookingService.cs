@@ -12,5 +12,7 @@ namespace EVChargingBackend.Services
         Task<Booking> CompleteBookingAsync(string bookingId, string stationOperatorUsername);
         Task<List<Booking>> GetBookingsByUserIdAsync(string userId);
         Task<List<Booking>> GetAllBookingsAsync();
+        Task<Dictionary<DateTime, long>> GetBookingTrendAsync(int days = 7);
+        Task<List<Booking>> GetUpcomingBookingsAsync(string userId = null, string stationId = null, int limit = 5);
     }
 }

@@ -8,5 +8,6 @@ namespace EVChargingBackend.Services
         Task<User> GetUserByUsernameAsync(string username);
         Task<bool> SetUserActiveStatusAsync(string userId, bool active);
         Task<List<User>> GetUsersByRoleAsync(string role);
+        Task<long> GetPendingUserApprovalCountAsync(string role = "EVOwner");
     }
 }
