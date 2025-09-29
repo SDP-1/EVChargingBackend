@@ -47,9 +47,8 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           // Allow requests from your React development server
-                          policy.WithOrigins("http://localhost:5173")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
+                          policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+                          policy.WithOrigins("https://ev-charging-booking-system-booking.vercel.app").AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
