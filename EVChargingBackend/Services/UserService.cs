@@ -46,7 +46,7 @@ namespace EVChargingBackend.Services
             if (active)
             {
                 // Only check status when activating
-                if (string.Equals(user.Message, "New", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(user.Message, "NewUser", StringComparison.OrdinalIgnoreCase))
                 {
                     updates.Add(
                         Builders<User>.Update.Set(

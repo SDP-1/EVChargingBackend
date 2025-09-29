@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "D:\\Selef Project\\EVChargingBackend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,20 +47,12 @@
       "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\mappings\\automapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\mappings\\automapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\controllers\\evownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\controllers\\evownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|solutionrelative:evchargingbackend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2C408C49-E376-49AD-AB1F-5817FDFBF2AF}|EVChargingBackend\\EVChargingBackend.csproj|d:\\selef project\\evchargingbackend\\evchargingbackend\\services\\ibookingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -149,54 +149,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IUserService.cs",
-              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\IUserService.cs",
-              "RelativeDocumentMoniker": "EVChargingBackend\\Services\\IUserService.cs",
-              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\IUserService.cs",
-              "RelativeToolTip": "EVChargingBackend\\Services\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T16:03:53.641Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "UserService.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Services\\UserService.cs",
               "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\UserService.cs",
               "RelativeToolTip": "EVChargingBackend\\Services\\UserService.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAAwEAAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAnwDEAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-28T15:46:54.45Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\AuthController.cs",
               "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\AuthController.cs",
               "RelativeToolTip": "EVChargingBackend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAcwGgAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAnwDIAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-25T17:58:03.89Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "BookingController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\BookingController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\BookingController.cs",
@@ -204,12 +187,11 @@
               "RelativeToolTip": "EVChargingBackend\\Controllers\\BookingController.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAAwCEAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T09:55:24.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T09:55:24.655Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UserController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\UserController.cs",
@@ -217,12 +199,11 @@
               "RelativeToolTip": "EVChargingBackend\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T14:24:51.543Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T14:24:51.543Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "UserUpdateDto.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\DTOs\\UserUpdateDto.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\DTOs\\UserUpdateDto.cs",
@@ -230,12 +211,49 @@
               "RelativeToolTip": "EVChargingBackend\\DTOs\\UserUpdateDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T14:37:04.603Z",
+              "WhenOpened": "2025-09-28T14:37:04.603Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Program.cs",
+              "RelativeDocumentMoniker": "EVChargingBackend\\Program.cs",
+              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Program.cs",
+              "RelativeToolTip": "EVChargingBackend\\Program.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAUwDgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-25T17:50:06.951Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "EVChargingBackend\\Models\\User.cs",
+              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Models\\User.cs",
+              "RelativeToolTip": "EVChargingBackend\\Models\\User.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAIAywBMAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-25T17:50:48.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "EVChargingBackend\\Services\\IUserService.cs",
+              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Services\\IUserService.cs",
+              "RelativeToolTip": "EVChargingBackend\\Services\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T16:03:53.641Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "BackofficeController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\BackofficeController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\BackofficeController.cs",
@@ -243,12 +261,11 @@
               "RelativeToolTip": "EVChargingBackend\\Controllers\\BackofficeController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T08:23:15.711Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T08:23:15.711Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\DashboardController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\DashboardController.cs",
@@ -256,12 +273,11 @@
               "RelativeToolTip": "EVChargingBackend\\Controllers\\DashboardController.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAAACMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T12:29:20.506Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T12:29:20.506Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "UpdateBookingDto.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\DTOs\\UpdateBookingDto.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\DTOs\\UpdateBookingDto.cs",
@@ -269,25 +285,11 @@
               "RelativeToolTip": "EVChargingBackend\\DTOs\\UpdateBookingDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T09:59:04.581Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T09:59:04.581Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Program.cs",
-              "RelativeDocumentMoniker": "EVChargingBackend\\Program.cs",
-              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Program.cs",
-              "RelativeToolTip": "EVChargingBackend\\Program.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAwEQAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-25T17:50:06.951Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "AutoMapping.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Mappings\\AutoMapping.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Mappings\\AutoMapping.cs",
@@ -295,25 +297,11 @@
               "RelativeToolTip": "EVChargingBackend\\Mappings\\AutoMapping.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T15:32:54.797Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T15:32:54.797Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Models\\User.cs",
-              "RelativeDocumentMoniker": "EVChargingBackend\\Models\\User.cs",
-              "ToolTip": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Models\\User.cs",
-              "RelativeToolTip": "EVChargingBackend\\Models\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-25T17:50:48.983Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
               "Title": "EVOwnerController.cs",
               "DocumentMoniker": "D:\\Selef Project\\EVChargingBackend\\EVChargingBackend\\Controllers\\EVOwnerController.cs",
               "RelativeDocumentMoniker": "EVChargingBackend\\Controllers\\EVOwnerController.cs",
@@ -321,8 +309,7 @@
               "RelativeToolTip": "EVChargingBackend\\Controllers\\EVOwnerController.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAQwAgAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T14:37:04.84Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T14:37:04.84Z"
             },
             {
               "$type": "Document",
@@ -334,8 +321,7 @@
               "RelativeToolTip": "EVChargingBackend\\Services\\IBookingService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T09:42:22.333Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T09:42:22.333Z"
             },
             {
               "$type": "Document",
@@ -347,8 +333,7 @@
               "RelativeToolTip": "EVChargingBackend\\Services\\BookingService.cs",
               "ViewState": "AgIAAJwAAAAAAAAAAAAAwMIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T09:54:24.123Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T09:54:24.123Z"
             },
             {
               "$type": "Document",
@@ -360,8 +345,7 @@
               "RelativeToolTip": "EVChargingBackend\\DTOs\\DashboardDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T12:28:52.884Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-28T12:28:52.884Z"
             },
             {
               "$type": "Document",
@@ -373,8 +357,7 @@
               "RelativeToolTip": "EVChargingBackend\\Services\\EVOwnerService.cs.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAqwEIAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T14:35:50.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T14:35:50.436Z"
             },
             {
               "$type": "Document",
@@ -386,8 +369,7 @@
               "RelativeToolTip": "EVChargingBackend\\Services\\ChargingStationService.cs",
               "ViewState": "AgIAACUAAAAAAAAAAAAqwDQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T13:30:02.176Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-27T13:30:02.176Z"
             },
             {
               "$type": "Document",
@@ -399,8 +381,7 @@
               "RelativeToolTip": "EVChargingBackend\\Services\\ChargingSlotService.cs",
               "ViewState": "AgIAAGAAAAAAAAAAAAAAAHUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-27T13:46:59.862Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-27T13:46:59.862Z"
             },
             {
               "$type": "Document",
@@ -412,8 +393,7 @@
               "RelativeToolTip": "EVChargingBackend\\Models\\Booking.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAowA4AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T09:52:12.766Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T09:52:12.766Z"
             },
             {
               "$type": "Document",
