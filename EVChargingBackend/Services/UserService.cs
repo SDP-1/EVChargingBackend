@@ -21,7 +21,10 @@ namespace EVChargingBackend.Services
         // Method to create a new user
         public async Task<User> CreateUserAsync(User user)
         {
+            // Ensure the ID is null to allow MongoDB to auto-generate it
+            user.Id = null;
             await _users.InsertOneAsync(user);
+            // After insertion, MongoDB will have populated the Id field
             return user;
         }
 

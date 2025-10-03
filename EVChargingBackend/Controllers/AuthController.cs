@@ -47,8 +47,11 @@ namespace EVChargingBackend.Controllers
             // Set Active based on role
             user.Active = role == "Backoffice";  // Backoffice = true, others = false
 
+            // Ensure ID is null so MongoDB can auto-generate it
+            user.Id = null;
+
             var createdUser = await _userService.CreateUserAsync(user);
-            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString(), Active = createdUser.Active });
+            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id?.ToString(), Active = createdUser.Active });
         }
 
 
