@@ -115,3 +115,19 @@ TestResults/
 *.tmp
 .DS_Store                                   # Mac
 [Tt]humbs.db                                # Windows
+.vs/EVChargingBackend/v17/DocumentLayout.backup.json
+*.json
+/.vs
+/.vs
+/.vs/EVChargingBackend/v17
+/.vs/EVChargingBackend
+.vs/EVChargingBackend/v17/.suo
+/.vs
+.vs/EVChargingBackend/v17/.suo
+.vs/EVChargingBackend/v17/DocumentLayout.json
+.vs/EVChargingBackend/v17/DocumentLayout.backup.json
+/.vs
+.vs/EVChargingBackend/v17/.futdcache.v2
+.vs/EVChargingBackend/v17/.suo
+.vs/EVChargingBackend/v17/DocumentLayout.backup.json
+.vs/EVChargingBackend/v17/DocumentLayout.json

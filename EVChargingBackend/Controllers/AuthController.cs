@@ -47,8 +47,11 @@ namespace EVChargingBackend.Controllers
             // Set Active based on role
             user.Active = role == "Backoffice";  // Backoffice = true, others = false
 
+            // Ensure ID is null so MongoDB can auto-generate it
+            user.Id = null;
+
             var createdUser = await _userService.CreateUserAsync(user);
-            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString(), Active = createdUser.Active });
+            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id?.ToString(), Active = createdUser.Active });
         }
 
 
@@ -58,12 +61,22 @@ namespace EVChargingBackend.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             var user = await _userService.GetUserByUsernameAsync(loginDto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-                return Unauthorized("Invalid credentials");
+            if (user == null)
+            {
+                return Unauthorized(new { Code = "USER_NOT_FOUND", Message = "User does not exist." });
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+            {
+                return Unauthorized(new { Code = "INVALID_PASSWORD", Message = "Incorrect password." });
+            }
 
             // Only allow login if user is active, unless Backoffice
-            if (user.Role != "Backoffice" && !user.Active)
-                return Unauthorized("Account is not active. Contact Backoffice.");
+            //if (user.Role != "Backoffice" && !user.Active)
+            if (!user.Active)
+            {
+                return Unauthorized(new { Code = "INACTIVE_ACCOUNT", Message = "Account is not active. Contact Backoffice." });
+            }
 
             var token = JwtHelper.GenerateJwtToken(
                 user.Username,
@@ -76,7 +89,7 @@ namespace EVChargingBackend.Controllers
             return Ok(new { Token = token });
         }
 
-        //activate a evowner or a stationofficer
+        // Activate a EVOwner or StationOperator
         [Authorize(Roles = "Backoffice")]
         [HttpPost("activate/{userId}")]
         public async Task<IActionResult> ActivateUser(string userId)
@@ -84,13 +97,13 @@ namespace EVChargingBackend.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("UserId is required.");
 
-            var success = await _userService.SetUserActiveStatusAsync(userId, true);
-            if (!success) return NotFound("User not found.");
+            var updatedUser = await _userService.SetUserActiveStatusAsync(userId, true);
+            if (updatedUser == null) return NotFound("User not found.");
 
-            return Ok(new { Success = success });
+            return Ok(updatedUser); // Return full updated user
         }
 
-        //deactive a evowner or stationoffice
+        // Deactivate a EVOwner or StationOperator
         [Authorize(Roles = "Backoffice")]
         [HttpPost("deactivate/{userId}")]
         public async Task<IActionResult> DeactivateUser(string userId)
@@ -98,10 +111,10 @@ namespace EVChargingBackend.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("UserId is required.");
 
-            var success = await _userService.SetUserActiveStatusAsync(userId, false);
-            if (!success) return NotFound("User not found.");
+            var updatedUser = await _userService.SetUserActiveStatusAsync(userId, false);
+            if (updatedUser == null) return NotFound("User not found.");
 
-            return Ok(new { Success = success });
+            return Ok(updatedUser); // Return full updated user
         }
 
     }

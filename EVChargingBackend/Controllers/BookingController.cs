@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using QRCoder;
 //using System.Drawing;
 //using System.Drawing.Imaging;
@@ -17,48 +19,60 @@ namespace EVChargingBackend.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly IMapper _mapper;
+        private readonly IChargingSlotService _slotService;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, IChargingSlotService slotService, IMapper mapper)
         {
             _bookingService = bookingService;
+            _slotService = slotService;
+            _mapper = mapper;
         }
+
 
         // Create reservation, Enforcing token based authentication
         [Authorize(Roles = "Backoffice,EVOwner")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateReservation([FromBody] CreateBookingDto dto)
         {
+            // Get the slot details
+            var slot = await _slotService.GetSlotByIdAsync(dto.SlotId);
+            if (slot == null)
+                return NotFound("Selected slot not found.");
+
+            // Check if slot is already booked
+            if (slot.IsBooked)
+                return BadRequest("Selected slot is already booked.");
+
+            // Validation: reservation must be within 7 days from now
             var now = DateTime.UtcNow;
-            if ((dto.ReservationDateTime - now).TotalDays > 7)
+            if ((slot.StartTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
-            // ← Add this to define userId
+            // Extract userId from JWT
             var userId = User.FindFirst("userId")?.Value;
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("UserId not found in token.");
 
+            // Create the booking using slot info
             var booking = new Booking
             {
                 UserId = userId,
-                StationId = dto.StationId,
-                ReservationDateTime = dto.ReservationDateTime
+                StationId = slot.StationId.ToString(),
+                SlotId = dto.SlotId,
+                ReservationDateTime = slot.StartTime
             };
 
             var newBooking = await _bookingService.CreateReservationAsync(booking);
 
-            var response = new BookingResponseDto
-            {
-                Id = newBooking.Id.ToString(),
-                UserId = newBooking.UserId,
-                StationId = newBooking.StationId,
-                ReservationDateTime = newBooking.ReservationDateTime,
-                Approved = newBooking.Approved,
-                Confirmed = newBooking.Confirmed,
-                Completed = newBooking.Completed
-            };
+            // Mark the slot as booked
+            await _slotService.BookSlotAsync(dto.SlotId, userId, newBooking.Id);
 
+            var response = _mapper.Map<BookingResponseDto>(newBooking);
             return Ok(response);
         }
+
+
 
 
         // Update reservation
@@ -69,31 +83,41 @@ namespace EVChargingBackend.Controllers
             var booking = await _bookingService.GetReservationByIdAsync(bookingId);
             if (booking == null) return NotFound("Booking not found");
 
+            // Restriction: cannot update less than 12 hours before reservation
             if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
                 return BadRequest("Cannot update less than 12 hours before reservation.");
 
-            // Partial updates: only apply non-null values
-            if (!string.IsNullOrEmpty(dto.StationId))
-                booking.StationId = dto.StationId;
+            // Partial updates: apply only non-null values
+            if (!string.IsNullOrEmpty(dto.SlotId))
+            {
+                // Fetch new slot info
+                var slot = await _slotService.GetSlotByIdAsync(dto.SlotId);
+                if (slot == null)
+                    return NotFound("Selected slot not found.");
 
-            if (dto.ReservationDateTime.HasValue)
-                booking.ReservationDateTime = dto.ReservationDateTime.Value;
+                if (slot.IsBooked)
+                    return BadRequest("Selected slot is already booked.");
+
+                // Free the old slot
+                if (!string.IsNullOrEmpty(booking.SlotId))
+                    await _slotService.FreeSlotAsync(booking.SlotId);
+
+                // Assign new slot
+                booking.SlotId = dto.SlotId;
+                booking.StationId = slot.StationId.ToString();
+                booking.ReservationDateTime = slot.StartTime;
+
+                // Mark the new slot as booked
+                var userId = User.FindFirst("userId")?.Value;
+                await _slotService.BookSlotAsync(dto.SlotId, userId, booking.Id);
+            }
 
             var updatedBooking = await _bookingService.UpdateReservationAsync(bookingId, booking);
-
-            var response = new BookingResponseDto
-            {
-                Id = updatedBooking.Id.ToString(),
-                UserId = updatedBooking.UserId,
-                StationId = updatedBooking.StationId,
-                ReservationDateTime = updatedBooking.ReservationDateTime,
-                Approved = updatedBooking.Approved,
-                Confirmed = updatedBooking.Confirmed,
-                Completed = updatedBooking.Completed
-            };
-
+            var response = _mapper.Map<BookingResponseDto>(updatedBooking);
             return Ok(response);
         }
+
+
 
 
         [HttpGet("debug")]
@@ -114,8 +138,14 @@ namespace EVChargingBackend.Controllers
         {
             var booking = await _bookingService.GetReservationByIdAsync(bookingId);
             if (booking == null) return NotFound("Booking not found");
+
+            // Cannot cancel less than 12 hours before the reservation
             if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
                 return BadRequest("Cannot cancel less than 12 hours before reservation.");
+
+            // Optionally, free up the slot
+            if (!string.IsNullOrEmpty(booking.SlotId))
+                await _slotService.FreeSlotAsync(booking.SlotId);
 
             var canceled = await _bookingService.CancelReservationAsync(bookingId);
 
@@ -126,6 +156,7 @@ namespace EVChargingBackend.Controllers
             });
         }
 
+
         //Confirm Booking
         [Authorize(Roles = "StationOperator")]
         [HttpPost("confirm/{bookingId}")]
@@ -133,16 +164,10 @@ namespace EVChargingBackend.Controllers
         {
             var username = User.Identity?.Name; // StationOperator username
             var booking = await _bookingService.ConfirmBookingAsync(bookingId, username);
-            return Ok(new
-            {
-                BookingId = booking.Id.ToString(),
-                UserId = booking.UserId,
-                StationId = booking.StationId,
-                ReservationDateTime = booking.ReservationDateTime,
-                Approved = booking.Approved,
-                Confirmed = booking.Confirmed,
-                Completed = booking.Completed
-            });
+
+            var response = _mapper.Map<BookingResponseDto>(booking);
+
+            return Ok(response);
         }
 
 
@@ -153,16 +178,10 @@ namespace EVChargingBackend.Controllers
         {
             var username = User.Identity?.Name; // StationOperator username
             var booking = await _bookingService.CompleteBookingAsync(bookingId, username);
-            return Ok(new
-            {
-                BookingId = booking.Id.ToString(),
-                UserId = booking.UserId,
-                StationId = booking.StationId,
-                ReservationDateTime = booking.ReservationDateTime,
-                Approved = booking.Approved,
-                Confirmed = booking.Confirmed,
-                Completed = booking.Completed
-            });
+
+            var response = _mapper.Map<BookingResponseDto>(booking);
+
+            return Ok(response);
         }
 
 
@@ -203,16 +222,9 @@ namespace EVChargingBackend.Controllers
                     return StatusCode(403, new { message = "Booking not confirmed, First Confirm Booking" });
                 }
 
-                return Ok(new
-                {
-                    BookingId = booking.Id.ToString(),
-                    UserId = booking.UserId,
-                    StationId = booking.StationId,
-                    ReservationDateTime = booking.ReservationDateTime,
-                    Approved = booking.Approved,
-                    Confirmed = booking.Confirmed,
-                    Completed = booking.Completed
-                });
+                var response = _mapper.Map<BookingResponseDto>(booking);
+
+                return Ok(response);
             }
             catch
             {
