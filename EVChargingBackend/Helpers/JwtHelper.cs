@@ -29,7 +29,7 @@
 
             var token = new JwtSecurityToken(
                 issuer: "http://localhost:5033",
-                audience: "http://localhost:3000",
+                audience: "http://localhost:5173",
                 claims: claims,
                 expires: DateTime.Now.AddHours(12),
                 signingCredentials: creds
