@@ -1,0 +1,73 @@
+# .gitignore for EV Charging Booking System
+# Tailored for a Vite/React frontend (frontend/) and common backend/IDE artifacts
+
+### OS files ###
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon
+
+### Node / Vite / frontend ###
+node_modules/
+dist/
+build/
+/.turbo/
+/.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files (local secrets)
+.env
+.env.*.local
+.env.local
+
+### Editors / IDEs ###
+.vscode/
+.idea/
+_ReSharper*/
+*.suo
+*.user
+*.sln.docstates
+*.DotSettings.user
+
+### Logs and coverage ###
+logs/
+
+debug.log*
+coverage/
+coverage/**
+TestResults/
+
+### Build / binaries (common for many backends) ###
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+### .NET / Visual Studio specific (if you have backend code) ###
+.vs/
+*.vspscc
+*.vssscc
+
+### Python (if present) ###
+venv/
+__pycache__/
+*.py[cod]
+
+### Misc ###
+*.DS_Store
+*.class
+*.log
+*.tmp
+
+# Keep lockfiles in the repo (package-lock.json / yarn.lock) — do NOT ignore them
+appsettings.json
+
+# If you accidentally committed files that should now be ignored, run:
+#   git rm -r --cached .; git add .; git commit -m "Refresh .gitignore"
+
+# NOTE: Do NOT add broad rules like "*.json" — that will ignore package.json and many important files.
+*.AssemblyReference.cache
