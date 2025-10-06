@@ -45,7 +45,7 @@ namespace EVChargingBackend.Controllers
                 return BadRequest("Selected slot is already booked.");
 
             // Validation: reservation must be within 7 days from now
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             if ((slot.StartTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
@@ -84,7 +84,7 @@ namespace EVChargingBackend.Controllers
             if (booking == null) return NotFound("Booking not found");
 
             // Restriction: cannot update less than 12 hours before reservation
-            if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
+            if ((booking.ReservationDateTime - DateTime.Now).TotalHours < 12)
                 return BadRequest("Cannot update less than 12 hours before reservation.");
 
             // Partial updates: apply only non-null values
@@ -140,7 +140,7 @@ namespace EVChargingBackend.Controllers
             if (booking == null) return NotFound("Booking not found");
 
             // Cannot cancel less than 12 hours before the reservation
-            if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
+            if ((booking.ReservationDateTime - DateTime.Now).TotalHours < 12)
                 return BadRequest("Cannot cancel less than 12 hours before reservation.");
 
             // Optionally, free up the slot
@@ -158,7 +158,7 @@ namespace EVChargingBackend.Controllers
 
 
         //Confirm Booking
-        [Authorize(Roles = "StationOperator")]
+        [Authorize(Roles = "StationOperator,Backoffice")]
         [HttpPost("confirm/{bookingId}")]
         public async Task<IActionResult> ConfirmBooking(string bookingId)
         {
@@ -172,7 +172,7 @@ namespace EVChargingBackend.Controllers
 
 
         //Complete Booking
-        [Authorize(Roles = "StationOperator")]
+        [Authorize(Roles = "StationOperator,Backoffice")]
         [HttpPost("complete/{bookingId}")]
         public async Task<IActionResult> CompleteBooking(string bookingId)
         {

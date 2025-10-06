@@ -48,7 +48,7 @@ namespace EVChargingBackend.Controllers
             }
 
             var dashboard = new DashboardDto { Role = roleClaim };
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.Now.Date;
 
             // --- Common/Base Metrics (All Roles) ---
 

@@ -51,7 +51,7 @@ namespace EVChargingBackend.Services
                     updates.Add(
                         Builders<User>.Update.Set(
                             u => u.Message,
-                            $"Active since {DateTime.UtcNow:yyyy-MM-dd}"
+                            $"Active since {DateTime.Now:yyyy-MM-dd}"
                         )
                     );
                 }
