@@ -265,6 +265,98 @@ namespace EVChargingBackend.Controllers
         }
 
 
+        // Reopen a canceled booking and re-book the associated slot if available
+        [Authorize(Roles = "Backoffice,EVOwner")]
+        [HttpPost("reopen/{bookingId}")]
+        public async Task<IActionResult> ReopenReservation(string bookingId)
+        {
+            try
+            {
+                var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+                if (booking == null) return NotFound("Booking not found");
+
+                if (!booking.Canceled) return BadRequest("Booking is not canceled.");
+
+                // Ensure reopen is allowed (in service we also validate timing)
+                var reopened = await _bookingService.ReopenReservationAsync(bookingId);
+
+                // If booking had a SlotId, attempt to re-book that slot
+                if (!string.IsNullOrEmpty(reopened.SlotId))
+                {
+                    var slot = await _slotService.GetSlotByIdAsync(reopened.SlotId);
+                    if (slot == null)
+                    {
+                        // Slot no longer exists; return reopened booking but with warning
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Associated slot no longer exists." });
+                    }
+
+                    if (slot.IsBooked)
+                    {
+                        // If slot is already booked, we cannot reassign. Return reopened booking with info.
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Associated slot is already booked by someone else." });
+                    }
+
+                    // Attempt to book the slot again for the same user
+                    var userId = reopened.UserId;
+                    var booked = await _slotService.BookSlotAsync(reopened.SlotId, userId, reopened.Id);
+                    if (!booked)
+                    {
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Failed to book the associated slot." });
+                    }
+                }
+
+                var response = _mapper.Map<BookingResponseDto>(reopened);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Booking not found");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        // Approve a booking (Backoffice)
+        [Authorize(Roles = "Backoffice")]
+        [HttpPost("approve/{bookingId}")]
+        public async Task<IActionResult> ApproveReservation(string bookingId)
+        {
+            try
+            {
+                var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+                if (booking == null) return NotFound("Booking not found");
+
+                if (booking.Canceled) return BadRequest("Cannot approve a canceled booking.");
+
+                var approved = await _bookingService.ApproveReservationAsync(bookingId);
+
+                // Optionally, you could auto-book the slot here if needed (slot booking is done at create time)
+                var response = _mapper.Map<BookingResponseDto>(approved);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Booking not found");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
     }
 
 

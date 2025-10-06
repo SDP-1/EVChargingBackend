@@ -59,8 +59,8 @@ namespace EVChargingBackend.Services
             if (existingBooking == null)
                 throw new KeyNotFoundException("Booking not found");
 
-            if ((existingBooking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
-                throw new InvalidOperationException("Cannot cancel less than 12 hours before reservation.");
+            if ((existingBooking.ReservationDateTime - DateTime.UtcNow).TotalHours < 3)
+                throw new InvalidOperationException("Cannot cancel less than 3 hours before reservation.");
 
             var filter = Builders<Booking>.Filter.Eq(b => b.Id, bookingId);
             var update = Builders<Booking>.Update
@@ -84,6 +84,15 @@ namespace EVChargingBackend.Services
             var booking = await GetReservationByIdAsync(bookingId);
             if (booking == null)
                 throw new KeyNotFoundException("Booking not found");
+
+            if (booking.Canceled)
+                throw new InvalidOperationException("Cannot confirm a canceled booking.");
+
+            if (!booking.Approved)
+                throw new InvalidOperationException("Booking must be approved before confirming.");
+
+            if (booking.Confirmed)
+                throw new InvalidOperationException("Booking is already confirmed.");
 
             // Optionally: check if this operator is allowed to confirm this station
             // if (booking.StationId != stationAssignedToOperator) throw new UnauthorizedAccessException();
@@ -192,6 +201,51 @@ namespace EVChargingBackend.Services
                                  .SortBy(b => b.ReservationDateTime)
                                  .Limit(limit)
                                  .ToListAsync();
+        }
+
+        // Reopen a canceled reservation
+        public async Task<Booking> ReopenReservationAsync(string bookingId)
+        {
+            var booking = await GetReservationByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException("Booking not found");
+
+            if (!booking.Canceled)
+                throw new InvalidOperationException("Booking is not canceled.");
+
+            // Only allow reopening if reservation is still in the future
+            if (booking.ReservationDateTime <= DateTime.UtcNow)
+                throw new InvalidOperationException("Cannot reopen past reservations.");
+
+            var filter = Builders<Booking>.Filter.Eq(b => b.Id, bookingId);
+            var update = Builders<Booking>.Update
+                .Set(b => b.Canceled, false)
+                .Set(b => b.UpdatedAt, DateTime.UtcNow);
+
+            await _bookings.UpdateOneAsync(filter, update);
+            return await GetReservationByIdAsync(bookingId);
+        }
+
+        // Approve a reservation
+        public async Task<Booking> ApproveReservationAsync(string bookingId)
+        {
+            var booking = await GetReservationByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException("Booking not found");
+
+            if (booking.Approved)
+                throw new InvalidOperationException("Booking is already approved.");
+
+            if (booking.Canceled)
+                throw new InvalidOperationException("Cannot approve a canceled booking.");
+
+            var filter = Builders<Booking>.Filter.Eq(b => b.Id, bookingId);
+            var update = Builders<Booking>.Update
+                .Set(b => b.Approved, true)
+                .Set(b => b.UpdatedAt, DateTime.UtcNow);
+
+            await _bookings.UpdateOneAsync(filter, update);
+            return await GetReservationByIdAsync(bookingId);
         }
 
     }
