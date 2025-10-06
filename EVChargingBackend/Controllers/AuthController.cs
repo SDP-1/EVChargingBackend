@@ -2,13 +2,14 @@
 
 namespace EVChargingBackend.Controllers
 {
-    using System.Threading.Tasks;
+    using EVChargingBackend.DTOs;
     using EVChargingBackend.Helpers;
     using EVChargingBackend.Models;    // Ensure the User model is being used
     using EVChargingBackend.Services;  // Ensure that IUserService is being used correctly
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using System.Threading.Tasks;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -25,33 +26,38 @@ namespace EVChargingBackend.Controllers
 
         // User Registration endpoint
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                // Return detailed model binding / validation errors so the client can fix the payload
+                return ValidationProblem(ModelState);
+            }
+
             // Normalize role
-            var role = user.Role?.Trim();
+            var role = dto.Role?.Trim();
 
             // Validate role
             if (role != "Backoffice" && role != "StationOperator" && role != "EVOwner")
-                return BadRequest("Invalid role. Must be Backoffice, StationOperator, or EVOwner.");
+                return BadRequest(new { Error = "Invalid role. Must be Backoffice, StationOperator, or EVOwner." });
 
             // NIC required only for EVOwner
-            if (role == "EVOwner" && string.IsNullOrEmpty(user.NIC))
-                return BadRequest("NIC is required for EVOwner.");
+            if (role == "EVOwner" && string.IsNullOrEmpty(dto.NIC))
+                return BadRequest(new { Error = "NIC is required for EVOwner." });
 
-            // Hash password
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-
-            // Set normalized role
-            user.Role = role;
-
-            // Set Active based on role
-            user.Active = role == "Backoffice";  // Backoffice = true, others = false
+            // Build User from DTO
+            var user = new User
+            {
+                Username = dto.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash),
+                Role = role,
+                NIC = dto.NIC,
+                Active = role == "Backoffice",
+            };
 
             var createdUser = await _userService.CreateUserAsync(user);
-            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id.ToString(), Active = createdUser.Active });
+            return Ok(new { Username = createdUser.Username, Role = createdUser.Role, UserId = createdUser.Id?.ToString(), Active = createdUser.Active });
         }
-
-
 
         // User Login endpoint
         [HttpPost("login")]
@@ -68,8 +74,6 @@ namespace EVChargingBackend.Controllers
                 return Unauthorized(new { Code = "INVALID_PASSWORD", Message = "Incorrect password." });
             }
 
-            // Only allow login if user is active, unless Backoffice
-            //if (user.Role != "Backoffice" && !user.Active)
             if (!user.Active)
             {
                 return Unauthorized(new { Code = "INACTIVE_ACCOUNT", Message = "Account is not active. Contact Backoffice." });
@@ -113,6 +117,5 @@ namespace EVChargingBackend.Controllers
 
             return Ok(updatedUser); // Return full updated user
         }
-
     }
 }
