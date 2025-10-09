@@ -1,8 +1,10 @@
 ﻿using EVChargingBackend.Models;
 using EVChargingBackend.Services;
+using EVChargingBackend.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EVChargingBackend.Controllers
@@ -52,7 +54,19 @@ namespace EVChargingBackend.Controllers
         {
             var station = await _stationService.GetStationByIdAsync(stationId);
             if (station == null) return NotFound();
-            return Ok(station);
+            
+            // Convert to DTO with proper type handling
+            var stationDto = new ChargingStationResponseDto
+            {
+                Id = station.Id,
+                Name = station.Name,
+                Location = station.Location,
+                GeoLocation = station.GeoLocation,
+                Type = station.Type,
+                Active = ConvertToBoolean(station.Active)
+            };
+            
+            return Ok(stationDto);
         }
 
         [Authorize(Roles = "Backoffice,EVOwner,StationOperator")]
@@ -60,7 +74,34 @@ namespace EVChargingBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             List<ChargingStation> stations = await _stationService.GetAllStationsAsync();
-            return Ok(stations);
+            
+            // Convert to DTOs with proper type handling
+            var stationDtos = stations.Select(s => new ChargingStationResponseDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Location = s.Location,
+                GeoLocation = s.GeoLocation,
+                Type = s.Type,
+                Active = ConvertToBoolean(s.Active)
+            }).ToList();
+            
+            return Ok(stationDtos);
+        }
+        
+        private bool ConvertToBoolean(object? value)
+        {
+            if (value == null) return true;
+            
+            if (value is bool boolValue)
+                return boolValue;
+            
+            if (value is string stringValue)
+            {
+                return stringValue.ToLower() == "true" || stringValue == "1";
+            }
+            
+            return true; // Default to true
         }
     }
 }
