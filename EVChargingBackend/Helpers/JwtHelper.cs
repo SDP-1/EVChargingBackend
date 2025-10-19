@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.Helpers
+﻿/****************************************************
+ * File Name: JwtHelper.cs
+ * Description: For JWT authentication integration
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+namespace EVChargingBackend.Helpers
 {
     using System;
     using System.Collections.Generic;

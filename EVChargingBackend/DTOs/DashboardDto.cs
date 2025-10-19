@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.DTOs
+﻿/****************************************************
+ * File Name: DashboardDto.cs
+ * Description: User Update DTO .
+ * Author: Sehan Devinda
+ * Date: 2025-10-01
+ ****************************************************/
+namespace EVChargingBackend.DTOs
 {
     public class DashboardDto
     {

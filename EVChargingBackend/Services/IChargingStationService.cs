@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿/****************************************************
+ * File Name: EVOWnerService.cs
+ * Description: EVOWnerService for EVOwners.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EVChargingBackend.Models;
 using EVChargingBackend.DTOs;

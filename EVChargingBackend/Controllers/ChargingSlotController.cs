@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: ChargingSlotController.cs
+ * Description: Defining Endpoint and Role authentication for ChargingSlots .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-05
+ ****************************************************/
+using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

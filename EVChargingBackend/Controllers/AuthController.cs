@@ -1,4 +1,10 @@
-﻿using BCrypt.Net;  // Correct namespace
+﻿/****************************************************
+ * File Name: AuthController.cs
+ * Description: Defining Endpoint and Role authentication for Users .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-09-28
+ ****************************************************/
+using BCrypt.Net;  // Correct namespace
 
 namespace EVChargingBackend.Controllers
 {

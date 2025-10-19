@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.DTOs
+﻿/****************************************************
+ * File Name: UserUpdateDto.cs
+ * Description: DTO for update User.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-28
+ ****************************************************/
+namespace EVChargingBackend.DTOs
 {
     public class UserUpdateDto
     {

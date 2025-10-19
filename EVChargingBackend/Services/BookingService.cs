@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: BookingService.cs
+ * Description: Service for Bookings.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-10-07
+ ****************************************************/
+using EVChargingBackend.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
