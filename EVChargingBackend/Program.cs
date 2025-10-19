@@ -1,3 +1,9 @@
+/****************************************************
+ * File Name: 
+ * Description: For JWT authentication integration
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
 using EVChargingBackend.Mappings;
 using EVChargingBackend.Services;  // For IUserService and UserService
 using Microsoft.AspNetCore.Authentication.JwtBearer;  // For JwtBearerDefaults
@@ -5,6 +11,7 @@ using Microsoft.Extensions.Configuration;  // For IConfiguration
 using Microsoft.IdentityModel.Tokens;  // For JwtBearerDefaults, TokenValidationParameters
 using MongoDB.Driver;
 using MongoDB.Driver;  // For MongoDB-related functionality
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;  // For encoding the SecretKey
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +31,7 @@ builder.Services.AddScoped<IChargingStationService, ChargingStationService>();
 builder.Services.AddScoped<IChargingSlotService, ChargingSlotService>();
 
 
-
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -33,7 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidIssuer = "http://localhost:5033",//  backend API runs on port 5000
-            ValidAudience = "http://localhost:3000",// Assuming you plan to have your frontend running on port 3000 (common for React apps)
+            ValidAudience = "http://localhost:5173",// Assuming you plan to have your frontend running on port 3000 (common for React apps)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
 
         };
@@ -46,9 +53,8 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           // Allow requests from your React development server
-                          policy.WithOrigins("http://localhost:5173")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
+                          policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+                          policy.WithOrigins("https://ev-charging-booking-system-booking.vercel.app").AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
@@ -58,13 +64,13 @@ builder.Services.AddAutoMapper(typeof(EVChargingBackend.Mappings.AutoMapping));
 
 var app = builder.Build();
 
+// Apply the CORS Policy
+app.UseCors("AllowFrontendOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 //app.UseDeveloperExceptionPage();
 app.MapControllers();
-
-// Apply the CORS Policy
-app.UseCors("AllowFrontendOrigin");
 
 app.Run();

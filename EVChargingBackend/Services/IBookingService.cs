@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: IBookingService.cs
+ * Description: Interface for Booking Service.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using EVChargingBackend.Models;
 
 namespace EVChargingBackend.Services
 {
@@ -12,5 +18,9 @@ namespace EVChargingBackend.Services
         Task<Booking> CompleteBookingAsync(string bookingId, string stationOperatorUsername);
         Task<List<Booking>> GetBookingsByUserIdAsync(string userId);
         Task<List<Booking>> GetAllBookingsAsync();
+        Task<Dictionary<DateTime, long>> GetBookingTrendAsync(int days = 7);
+        Task<List<Booking>> GetUpcomingBookingsAsync(string userId = null, string stationId = null, int limit = 5);
+        Task<Booking> ReopenReservationAsync(string bookingId);
+        Task<Booking> ApproveReservationAsync(string bookingId);
     }
 }

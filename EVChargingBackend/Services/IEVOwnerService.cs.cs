@@ -12,6 +12,7 @@ namespace EVChargingBackend.Services
         Task<bool> ActivateEVOwnerAsync(string nic);         // Backoffice only
         Task<bool> DeactivateEVOwnerAsync(string nic);       // EVOwner themselves
         Task<List<User>> GetAllEVOwnersAsync();
-
+        Task<List<User>> GetActiveBackofficeEVOwnersAsync(); //active evowners get all for backoffice
+        Task<string> GetUserIdByNICAsync(string nic); //map user id of evonwer from nic
     }
 }

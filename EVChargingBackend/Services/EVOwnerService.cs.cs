@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: EVOWnerService.cs
+ * Description: EVOWnerService for EVOwners.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using EVChargingBackend.Models;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
@@ -63,10 +69,23 @@ namespace EVChargingBackend.Services
             var result = await _users.UpdateOneAsync(filter, update);
             return result.ModifiedCount > 0;
         }
-
+        //get all evowners active & inactive
         public async Task<List<User>> GetAllEVOwnersAsync()
         {
             return await _users.Find(u => u.Role == "EVOwner").ToListAsync();
+        }
+        //get all active ev owners
+        public async Task<List<User>> GetActiveBackofficeEVOwnersAsync()
+        {
+            return await _users.Find(u => u.Role == "EVOwner" && u.Active == true).ToListAsync();
+        }
+        //get evwoners by mapping nic to userid, to save evowners userid in booking when backoffice create booking
+        public async Task<string> GetUserIdByNICAsync(string nic)
+        {
+            var evOwner = await _users.Find(u => u.Role == "EVOwner" && u.NIC == nic).FirstOrDefaultAsync();
+            if (evOwner == null)
+                return null;  // or throw an exception if you prefer
+            return evOwner.Id;  // Return the userId (which is stored as Id in MongoDB)
         }
 
     }

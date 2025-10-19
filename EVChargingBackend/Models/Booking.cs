@@ -1,4 +1,10 @@
-﻿using MongoDB.Bson;
+﻿/****************************************************
+ * File Name: Booking.cs
+ * Description: Model for Reservations.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class Booking

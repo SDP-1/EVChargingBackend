@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿/****************************************************
+ * File Name: BackOfficeController.cs
+ * Description: Defining Endpoint and Role authentication for Backoffice .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-09-28
+ ****************************************************/
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EVChargingBackend.Services;
 using System.Threading.Tasks;

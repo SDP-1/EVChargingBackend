@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.Models
+﻿/****************************************************
+ * File Name: User.cs
+ * Description: Model for Slots.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+namespace EVChargingBackend.Models
 {
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
@@ -17,5 +23,6 @@
         public string? NIC { get; set; }         // Required if Role == "EVOwner"
 
         public bool Active { get; set; } = false; // EVOwner can deactivate; Backoffice can reactivate
+        public string Message { get; set; } = "NewUser";
     }
 }

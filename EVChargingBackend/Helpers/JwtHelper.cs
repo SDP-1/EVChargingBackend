@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.Helpers
+﻿/****************************************************
+ * File Name: JwtHelper.cs
+ * Description: For JWT authentication integration
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+namespace EVChargingBackend.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -29,7 +35,7 @@
 
             var token = new JwtSecurityToken(
                 issuer: "http://localhost:5033",
-                audience: "http://localhost:3000",
+                audience: "http://localhost:5173",
                 claims: claims,
                 expires: DateTime.Now.AddHours(12),
                 signingCredentials: creds
