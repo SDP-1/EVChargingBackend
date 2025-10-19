@@ -13,11 +13,11 @@ namespace EVChargingBackend.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }   // store as string in C#
+        public string? Id { get; set; }   // store as string in C#, nullable for auto-generation
 
-        public string Username { get; set; }    // used for login
-        public string PasswordHash { get; set; }
-        public string Role { get; set; }        // "Backoffice", "StationOperator", "EVOwner"
+        public string? Username { get; set; }    // used for login
+        public string? PasswordHash { get; set; }
+        public string? Role { get; set; }        // "Backoffice", "StationOperator", "EVOwner"
 
         [BsonIgnoreIfNull]
         public string? NIC { get; set; }         // Required if Role == "EVOwner"
