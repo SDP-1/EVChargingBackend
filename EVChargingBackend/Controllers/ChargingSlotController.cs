@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: ChargingSlotController.cs
+ * Description: Defining Endpoint and Role authentication for ChargingSlots .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-05
+ ****************************************************/
+using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +68,28 @@ namespace EVChargingBackend.Controllers
             return Ok(slot);
         }
 
+        [Authorize(Roles = "Backoffice")]
+        [HttpDelete("deinit/{stationId}/{date}")]
+        public async Task<IActionResult> DeinitializeSlots(string stationId, DateTime date)
+        {
+            var success = await _slotService.DeleteSlotsForDateAsync(stationId, date);
+            if (!success)
+                return NotFound("No slots found for the given station and date.");
+
+            return Ok(new { Success = success, Message = "Slots de-initialized for the date." });
+        }
+
+        // Delete a single slot (Backoffice only)
+        [Authorize(Roles = "Backoffice")]
+        [HttpDelete("{slotId}")]
+        public async Task<IActionResult> DeleteSlot(string slotId)
+        {
+            var success = await _slotService.DeleteSlotAsync(slotId);
+            if (!success)
+                return NotFound("Slot not found or already deleted.");
+
+            return Ok(new { Success = success, Message = "Slot deleted successfully." });
+        }
 
     }
 }

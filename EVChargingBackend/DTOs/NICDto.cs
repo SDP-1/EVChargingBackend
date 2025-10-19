@@ -1,4 +1,5 @@
-﻿namespace EVChargingBackend.DTOs
+﻿
+namespace EVChargingBackend.DTOs
 {
     public class NICDto
     {

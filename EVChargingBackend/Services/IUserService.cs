@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.DTOs;
+﻿/****************************************************
+ * File Name: IUserService.cs
+ * Description: Interface Service for all Users.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
 
 namespace EVChargingBackend.Services

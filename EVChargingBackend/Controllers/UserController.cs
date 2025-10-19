@@ -1,4 +1,10 @@
-﻿using AutoMapper;
+﻿/****************************************************
+ * File Name: UserController.cs
+ * Description: Defining Endpoint and Role authentication for Users .
+ * Author: Sehan Devinda
+ * Last Changes Date: 2025-09-28
+ ****************************************************/
+using AutoMapper;
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
 using EVChargingBackend.Services;

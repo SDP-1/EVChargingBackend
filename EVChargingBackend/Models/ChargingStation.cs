@@ -1,9 +1,26 @@
-﻿using MongoDB.Bson;
+﻿/****************************************************
+ * File Name: ChargingStation.cs
+ * Description: Model for Stations.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace EVChargingBackend.Models
 {
+    public class GeoLocation
+    {
+        // Latitude and Longitude in decimal degrees
+        [BsonElement("lat")]
+        public double? Latitude { get; set; }
+
+        [BsonElement("lon")]
+        public double? Longitude { get; set; }
+    }
+
+    [BsonIgnoreExtraElements]
     public class ChargingStation
     {
         [BsonId]
@@ -12,27 +29,37 @@ namespace EVChargingBackend.Models
         public string? Id { get; set; }  // store as string in C#
 
         public string Name { get; set; }
-        public string Location { get; set; }
-        
+
+        // Map existing DB field 'Location' to the Address property for backwards compatibility
+        [BsonElement("Location")]
+        public string Address { get; set; }
+
+        // Geographical coordinates for mapping (optional)
+        [BsonElement("GeoLocation")]
         [BsonIgnoreIfNull]
-        public object? GeoLocation { get; set; }   // Geographic coordinates as Document - ignore if null
-        
-        [BsonIgnoreIfNull]
-        public int? NumberOfConnectors { get; set; }  // Number of connectors - ignore if null
-        
-        [BsonIgnoreIfNull]
-        public object? ConnectorTypes { get; set; }   // Array of connector types - ignore if null
-        
-        [BsonIgnoreIfNull]
-        public object? OperatingHours { get; set; }   // Operating hours as Document - ignore if null
-        
+        public GeoLocation? GeoLocation { get; set; }
+
+        // Station meta
         public string Type { get; set; }           // "AC" or "DC"
-        
+        public bool Active { get; set; } = true;   // Station status
+
+        // Additional details
+        public int NumberOfConnectors { get; set; } = 1;
+
         [BsonIgnoreIfNull]
-        public object? Active { get; set; }         // Station status - can be string or boolean
-        
-        // This will capture any additional fields that are not explicitly mapped
-        [BsonExtraElements]
-        public BsonDocument? ExtraElements { get; set; }
+        public List<string>? ConnectorTypes { get; set; } // e.g. ["Type2","CHAdeMO"]
+
+        public string? OperatingHours { get; set; } // human readable
+
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+
+        public bool IsPublic { get; set; } = true;
+
+        [BsonIgnoreIfNull]
+        public List<string>? Amenities { get; set; } // e.g. ["Restroom","Cafe","Parking"]
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

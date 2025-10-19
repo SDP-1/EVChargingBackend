@@ -64,6 +64,7 @@ __pycache__/
 *.tmp
 
 # Keep lockfiles in the repo (package-lock.json / yarn.lock) — do NOT ignore them
+appsettings.json
 
 # If you accidentally committed files that should now be ignored, run:
 #   git rm -r --cached .; git add .; git commit -m "Refresh .gitignore"

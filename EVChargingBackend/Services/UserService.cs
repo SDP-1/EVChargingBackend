@@ -1,4 +1,9 @@
-﻿// Add the necessary namespaces for MongoDB and Task
+﻿/****************************************************
+ * File Name: UserService.cs
+ * Description:  Service for all Users.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;  // Assuming the User model is in this namespace
 using MongoDB.Bson;
@@ -54,7 +59,7 @@ namespace EVChargingBackend.Services
                     updates.Add(
                         Builders<User>.Update.Set(
                             u => u.Message,
-                            $"Active since {DateTime.UtcNow:yyyy-MM-dd}"
+                            $"Active since {DateTime.Now:yyyy-MM-dd}"
                         )
                     );
                 }
