@@ -11,6 +11,7 @@ using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace EVChargingBackend.Controllers
 {
@@ -155,6 +156,17 @@ namespace EVChargingBackend.Controllers
             return Ok(activeBackofficeEVOwners);
         }
 
+        // Search EVOwners by NIC fragment (Backoffice only)
+        [Authorize(Roles = "Backoffice")]
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+                return BadRequest("Query parameter 'q' is required.");
+
+            var results = await _eVOwnerService.SearchEVOwnersByNICAsync(q);
+            return Ok(results);
+        }
 
     }
 }

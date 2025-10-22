@@ -8,6 +8,7 @@ using EVChargingBackend.Models;
 using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace EVChargingBackend.Services
 {
@@ -86,6 +87,19 @@ namespace EVChargingBackend.Services
             if (evOwner == null)
                 return null;  // or throw an exception if you prefer
             return evOwner.Id;  // Return the userId (which is stored as Id in MongoDB)
+        }
+
+        // Search EVOwners by NIC fragment (case-insensitive substring match)
+        public async Task<List<User>> SearchEVOwnersByNICAsync(string nicFragment)
+        {
+            if (string.IsNullOrWhiteSpace(nicFragment))
+                return new List<User>();
+
+            // Use case-insensitive regex for substring matching
+            var filter = Builders<User>.Filter.Eq(u => u.Role, "EVOwner") &
+                         Builders<User>.Filter.Regex(u => u.NIC, new MongoDB.Bson.BsonRegularExpression(nicFragment, "i"));
+
+            return await _users.Find(filter).ToListAsync();
         }
 
     }
