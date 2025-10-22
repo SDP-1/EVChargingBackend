@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.DTOs
+﻿/****************************************************
+ * File Name: BookingResponseDto.cs
+ * Description: BookingResponse DTO .
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-28
+ ****************************************************/
+namespace EVChargingBackend.DTOs
 {
     public class BookingResponseDto
     {

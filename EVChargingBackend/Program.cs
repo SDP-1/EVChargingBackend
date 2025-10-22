@@ -1,3 +1,9 @@
+/****************************************************
+ * File Name: 
+ * Description: For JWT authentication integration
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
 using EVChargingBackend.Mappings;
 using EVChargingBackend.Services;  // For IUserService and UserService
 using Microsoft.AspNetCore.Authentication.JwtBearer;  // For JwtBearerDefaults

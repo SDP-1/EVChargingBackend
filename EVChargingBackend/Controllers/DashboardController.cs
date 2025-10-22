@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.DTOs;
+﻿/****************************************************
+ * File Name: DashboardController.cs
+ * Description: Defining Endpoint and Role authentication for Dashboard summary endpoints.
+ * Author: Sehan Devinda
+ * Last Changes Date: 2025-10-07
+ ****************************************************/
+using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using Microsoft.AspNetCore.Authorization;

@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name:ChargingStationController.cs
+ * Description: Defining Endpoint and Role authentication for ChargingStations .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-09
+ ****************************************************/
+using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using EVChargingBackend.DTOs;
 using Microsoft.AspNetCore.Authorization;

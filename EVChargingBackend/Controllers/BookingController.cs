@@ -1,4 +1,10 @@
-﻿using System.Security.Claims;
+﻿/****************************************************
+ * File Name: BookingController.cs
+ * Description: Defining Endpoint and Role authentication for Bookings .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-09
+ ****************************************************/
+using System.Security.Claims;
 using AutoMapper;
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
@@ -21,11 +27,13 @@ namespace EVChargingBackend.Controllers
         private readonly IBookingService _bookingService;
         private readonly IMapper _mapper;
         private readonly IChargingSlotService _slotService;
+        private readonly IEVOwnerService _eVOwnerService;
 
-        public BookingController(IBookingService bookingService, IChargingSlotService slotService, IMapper mapper)
+        public BookingController(IBookingService bookingService, IChargingSlotService slotService, IEVOwnerService eVOwnerService,IMapper mapper)
         {
             _bookingService = bookingService;
             _slotService = slotService;
+            _eVOwnerService = eVOwnerService;
             _mapper = mapper;
         }
 
@@ -35,6 +43,9 @@ namespace EVChargingBackend.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateReservation([FromBody] CreateBookingDto dto)
         {
+            if (dto == null)
+                return BadRequest("Booking data is missing.");
+
             // Get the slot details
             var slot = await _slotService.GetSlotByIdAsync(dto.SlotId);
             if (slot == null)
@@ -49,15 +60,29 @@ namespace EVChargingBackend.Controllers
             if ((slot.StartTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
-            // Extract userId from JWT
-            var userId = User.FindFirst("userId")?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized("UserId not found in token.");
+            // If the user is a backoffice user, they must provide the NIC of the EVOwner
+            string evOwnerUserId = null;
+            if (User.IsInRole("Backoffice"))
+            {
+                if (string.IsNullOrEmpty(dto.NIC))  // Check if NIC is provided by Backoffice
+                    return BadRequest("NIC is required for EVOwner when creating a booking from Backoffice.");
 
-            // Create the booking using slot info
+                evOwnerUserId = await _eVOwnerService.GetUserIdByNICAsync(dto.NIC);  // Use the new method to fetch the userId by NIC
+                if (string.IsNullOrEmpty(evOwnerUserId))
+                    return NotFound("EVOwner not found.");
+            }
+            else
+            {
+                // If the logged-in user is an EVOwner, the booking should be created for their own userId
+                evOwnerUserId = User.FindFirst("userId")?.Value;
+                if (string.IsNullOrEmpty(evOwnerUserId))
+                    return Unauthorized("UserId not found in token.");
+            }
+
+            // Create the booking using slot info and the selected EVOwner's userId
             var booking = new Booking
             {
-                UserId = userId,
+                UserId = evOwnerUserId,  // Assign the EVOwner's userId here, not the backoffice's
                 StationId = slot.StationId.ToString(),
                 SlotId = dto.SlotId,
                 ReservationDateTime = slot.StartTime
@@ -66,11 +91,13 @@ namespace EVChargingBackend.Controllers
             var newBooking = await _bookingService.CreateReservationAsync(booking);
 
             // Mark the slot as booked
-            await _slotService.BookSlotAsync(dto.SlotId, userId, newBooking.Id);
+            await _slotService.BookSlotAsync(dto.SlotId, evOwnerUserId, newBooking.Id);
 
             var response = _mapper.Map<BookingResponseDto>(newBooking);
             return Ok(response);
         }
+
+
 
 
 

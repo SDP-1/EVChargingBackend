@@ -1,4 +1,10 @@
-﻿using MongoDB.Bson;
+﻿/****************************************************
+ * File Name: ChargingSlot.cs
+ * Description: Model for Slots.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 

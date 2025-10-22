@@ -1,4 +1,10 @@
-﻿using MongoDB.Driver;
+﻿/****************************************************
+ * File Name: ChargingSlotService.cs
+ * Description: Service for Slots.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using MongoDB.Driver;
 using EVChargingBackend.Models;
 using System;
 using System.Collections.Generic;

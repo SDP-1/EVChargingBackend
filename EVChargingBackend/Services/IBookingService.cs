@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name: IBookingService.cs
+ * Description: Interface for Booking Service.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using EVChargingBackend.Models;
 
 namespace EVChargingBackend.Services
 {

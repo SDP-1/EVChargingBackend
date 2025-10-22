@@ -1,3 +1,9 @@
+/****************************************************
+ * File Name: ChargingStationUpdateDto.cs
+ * Description: ChargingStationUpdate DTO .
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-28
+ ****************************************************/
 using System.Collections.Generic;
 using EVChargingBackend.Models;
 

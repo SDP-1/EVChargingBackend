@@ -1,4 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿/****************************************************
+ * File Name: RegisterDto.cs
+ * Description: User Register DTO .
+ * Author: Sehand Devinda
+ * Date: 2025-10-05
+ ****************************************************/
+using System.ComponentModel.DataAnnotations;
 
 namespace EVChargingBackend.DTOs
 {
