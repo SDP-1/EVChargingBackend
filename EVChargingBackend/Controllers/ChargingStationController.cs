@@ -1,4 +1,10 @@
-﻿using EVChargingBackend.Models;
+﻿/****************************************************
+ * File Name:ChargingStationController.cs
+ * Description: Defining Endpoint and Role authentication for ChargingStations .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-09
+ ****************************************************/
+using EVChargingBackend.Models;
 using EVChargingBackend.Services;
 using EVChargingBackend.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -24,8 +30,17 @@ namespace EVChargingBackend.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateStation([FromBody] ChargingStation station)
         {
-            if (string.IsNullOrEmpty(station.Name) || string.IsNullOrEmpty(station.Location) || string.IsNullOrEmpty(station.Type))
-                return BadRequest("Name, Location, and Type are required.");
+            if (string.IsNullOrEmpty(station.Name) || string.IsNullOrEmpty(station.Address) || string.IsNullOrEmpty(station.Type))
+                return BadRequest("Name, Address, and Type are required.");
+
+            // Optional: validate geo coordinates when provided
+            if (station.GeoLocation != null)
+            {
+                if (station.GeoLocation.Latitude.HasValue && (station.GeoLocation.Latitude < -90 || station.GeoLocation.Latitude > 90))
+                    return BadRequest("Latitude must be between -90 and 90.");
+                if (station.GeoLocation.Longitude.HasValue && (station.GeoLocation.Longitude < -180 || station.GeoLocation.Longitude > 180))
+                    return BadRequest("Longitude must be between -180 and 180.");
+            }
 
             var createdStation = await _stationService.CreateStationAsync(station);
             return Ok(createdStation);
@@ -36,6 +51,16 @@ namespace EVChargingBackend.Controllers
         public async Task<IActionResult> Update(string stationId, [FromBody] ChargingStation station)
         {
             var updated = await _stationService.UpdateStationAsync(stationId, station);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+
+        [Authorize(Roles = "Backoffice")]
+        [HttpPatch("partial/{stationId}")]
+        public async Task<IActionResult> PartialUpdate(string stationId, [FromBody] ChargingStationUpdateDto updatedFields)
+        {
+            var updated = await _stationService.UpdateStationPartialAsync(stationId, updatedFields);
+            if (updated == null) return NotFound();
             return Ok(updated);
         }
 
@@ -45,6 +70,24 @@ namespace EVChargingBackend.Controllers
         {
             var success = await _stationService.DeactivateStationAsync(stationId);
             if (!success) return BadRequest("Cannot deactivate station with active bookings.");
+            return Ok(new { Success = true });
+        }
+
+        [Authorize(Roles = "Backoffice")]
+        [HttpPost("activate/{stationId}")]
+        public async Task<IActionResult> Activate(string stationId)
+        {
+            var success = await _stationService.ActivateStationAsync(stationId);
+            if (!success) return NotFound();
+            return Ok(new { Success = true });
+        }
+
+        [Authorize(Roles = "Backoffice")]
+        [HttpDelete("delete/{stationId}")]
+        public async Task<IActionResult> Delete(string stationId)
+        {
+            var success = await _stationService.DeleteStationAsync(stationId);
+            if (!success) return NotFound();
             return Ok(new { Success = true });
         }
 

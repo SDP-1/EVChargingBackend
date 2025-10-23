@@ -1,4 +1,10 @@
-﻿namespace EVChargingBackend.Models
+﻿/****************************************************
+ * File Name: User.cs
+ * Description: Model for Slots.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-24
+ ****************************************************/
+namespace EVChargingBackend.Models
 {
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;

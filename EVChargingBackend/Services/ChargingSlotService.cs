@@ -1,4 +1,10 @@
-﻿using MongoDB.Driver;
+﻿/****************************************************
+ * File Name: ChargingSlotService.cs
+ * Description: Service for Slots.
+ * Author: Avindi Obeyesekere
+ * Date: 2025-09-26
+ ****************************************************/
+using MongoDB.Driver;
 using EVChargingBackend.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +22,8 @@ namespace EVChargingBackend.Services
         Task<List<ChargingSlot>> GetAllSlotsAsync(string stationId, DateTime date);
         Task<bool> FreeSlotAsync(string slotId); 
         Task<bool> BookSlotAsync(string slotId, string evoOwnerId, string bookingId);
+        Task<bool> DeleteSlotsForDateAsync(string stationId, DateTime date);
+        Task<bool> DeleteSlotAsync(string slotId);
     }
 
     public class ChargingSlotService : IChargingSlotService
@@ -28,14 +36,27 @@ namespace EVChargingBackend.Services
         }
 
         // Initialize fixed 1-hour slots for a station on a date
+        // Initialize fixed 1-hour slots for a station on a date
         public async Task InitializeDailySlotsAsync(string stationId, DateTime date)
         {
-            var slots = new List<ChargingSlot>();
-            int startHour = 8, endHour = 18;
+            // Normalize the date to midnight
+            var dayStart = date.Date;
+            var dayEnd = dayStart.AddDays(1);
 
-            for (int h = startHour; h < endHour; h++)
+            // Check if slots already exist for this station & date
+            var existingFilter = Builders<ChargingSlot>.Filter.Eq(s => s.StationId, stationId) &
+                                 Builders<ChargingSlot>.Filter.Gte(s => s.StartTime, dayStart) &
+                                 Builders<ChargingSlot>.Filter.Lt(s => s.StartTime, dayEnd);
+
+            var existingCount = await _slots.CountDocumentsAsync(existingFilter);
+            if (existingCount > 0)
+                return; // Slots already initialized for this station on this date
+
+            // Create slots from 08:00 to 18:00
+            var slots = new List<ChargingSlot>();
+            for (int hour = 8; hour < 18; hour++)
             {
-                var start = new DateTime(date.Year, date.Month, date.Day, h, 0, 0);
+                var start = new DateTime(date.Year, date.Month, date.Day, hour, 0, 0);
                 var end = start.AddHours(1);
 
                 slots.Add(new ChargingSlot
@@ -50,6 +71,7 @@ namespace EVChargingBackend.Services
             if (slots.Count > 0)
                 await _slots.InsertManyAsync(slots);
         }
+
 
         // Get free slots for a station on a given day
         public async Task<List<ChargingSlot>> GetAvailableSlotsAsync(string stationId, DateTime date)
@@ -120,5 +142,20 @@ namespace EVChargingBackend.Services
             return result.ModifiedCount > 0;
         }
 
+        public async Task<bool> DeleteSlotsForDateAsync(string stationId, DateTime date)
+        {
+            var filter = Builders<ChargingSlot>.Filter.Eq(s => s.StationId, stationId) &
+                         Builders<ChargingSlot>.Filter.Gte(s => s.StartTime, date.Date) &
+                         Builders<ChargingSlot>.Filter.Lt(s => s.StartTime, date.Date.AddDays(1));
+
+            var result = await _slots.DeleteManyAsync(filter);
+            return result.DeletedCount > 0;
+        }
+        public async Task<bool> DeleteSlotAsync(string slotId)
+        {
+            var filter = Builders<ChargingSlot>.Filter.Eq("_id", ObjectId.Parse(slotId));
+            var result = await _slots.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
     }
 }

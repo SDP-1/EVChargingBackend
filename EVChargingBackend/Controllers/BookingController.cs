@@ -1,4 +1,10 @@
-﻿using System.Security.Claims;
+﻿/****************************************************
+ * File Name: BookingController.cs
+ * Description: Defining Endpoint and Role authentication for Bookings .
+ * Author: Avindi Obeyesekere
+ * Last Changes Date: 2025-10-09
+ ****************************************************/
+using System.Security.Claims;
 using AutoMapper;
 using EVChargingBackend.DTOs;
 using EVChargingBackend.Models;
@@ -21,11 +27,13 @@ namespace EVChargingBackend.Controllers
         private readonly IBookingService _bookingService;
         private readonly IMapper _mapper;
         private readonly IChargingSlotService _slotService;
+        private readonly IEVOwnerService _eVOwnerService;
 
-        public BookingController(IBookingService bookingService, IChargingSlotService slotService, IMapper mapper)
+        public BookingController(IBookingService bookingService, IChargingSlotService slotService, IEVOwnerService eVOwnerService,IMapper mapper)
         {
             _bookingService = bookingService;
             _slotService = slotService;
+            _eVOwnerService = eVOwnerService;
             _mapper = mapper;
         }
 
@@ -35,6 +43,9 @@ namespace EVChargingBackend.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateReservation([FromBody] CreateBookingDto dto)
         {
+            if (dto == null)
+                return BadRequest("Booking data is missing.");
+
             // Get the slot details
             var slot = await _slotService.GetSlotByIdAsync(dto.SlotId);
             if (slot == null)
@@ -45,19 +56,33 @@ namespace EVChargingBackend.Controllers
                 return BadRequest("Selected slot is already booked.");
 
             // Validation: reservation must be within 7 days from now
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             if ((slot.StartTime - now).TotalDays > 7)
                 return BadRequest("Reservation date must be within 7 days.");
 
-            // Extract userId from JWT
-            var userId = User.FindFirst("userId")?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized("UserId not found in token.");
+            // If the user is a backoffice user, they must provide the NIC of the EVOwner
+            string evOwnerUserId = null;
+            if (User.IsInRole("Backoffice"))
+            {
+                if (string.IsNullOrEmpty(dto.NIC))  // Check if NIC is provided by Backoffice
+                    return BadRequest("NIC is required for EVOwner when creating a booking from Backoffice.");
 
-            // Create the booking using slot info
+                evOwnerUserId = await _eVOwnerService.GetUserIdByNICAsync(dto.NIC);  // Use the new method to fetch the userId by NIC
+                if (string.IsNullOrEmpty(evOwnerUserId))
+                    return NotFound("EVOwner not found.");
+            }
+            else
+            {
+                // If the logged-in user is an EVOwner, the booking should be created for their own userId
+                evOwnerUserId = User.FindFirst("userId")?.Value;
+                if (string.IsNullOrEmpty(evOwnerUserId))
+                    return Unauthorized("UserId not found in token.");
+            }
+
+            // Create the booking using slot info and the selected EVOwner's userId
             var booking = new Booking
             {
-                UserId = userId,
+                UserId = evOwnerUserId,  // Assign the EVOwner's userId here, not the backoffice's
                 StationId = slot.StationId.ToString(),
                 SlotId = dto.SlotId,
                 ReservationDateTime = slot.StartTime
@@ -66,11 +91,13 @@ namespace EVChargingBackend.Controllers
             var newBooking = await _bookingService.CreateReservationAsync(booking);
 
             // Mark the slot as booked
-            await _slotService.BookSlotAsync(dto.SlotId, userId, newBooking.Id);
+            await _slotService.BookSlotAsync(dto.SlotId, evOwnerUserId, newBooking.Id);
 
             var response = _mapper.Map<BookingResponseDto>(newBooking);
             return Ok(response);
         }
+
+
 
 
 
@@ -84,7 +111,7 @@ namespace EVChargingBackend.Controllers
             if (booking == null) return NotFound("Booking not found");
 
             // Restriction: cannot update less than 12 hours before reservation
-            if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
+            if ((booking.ReservationDateTime - DateTime.Now).TotalHours < 12)
                 return BadRequest("Cannot update less than 12 hours before reservation.");
 
             // Partial updates: apply only non-null values
@@ -140,7 +167,7 @@ namespace EVChargingBackend.Controllers
             if (booking == null) return NotFound("Booking not found");
 
             // Cannot cancel less than 12 hours before the reservation
-            if ((booking.ReservationDateTime - DateTime.UtcNow).TotalHours < 12)
+            if ((booking.ReservationDateTime - DateTime.Now).TotalHours < 12)
                 return BadRequest("Cannot cancel less than 12 hours before reservation.");
 
             // Optionally, free up the slot
@@ -158,7 +185,7 @@ namespace EVChargingBackend.Controllers
 
 
         //Confirm Booking
-        [Authorize(Roles = "StationOperator")]
+        [Authorize(Roles = "StationOperator,Backoffice")]
         [HttpPost("confirm/{bookingId}")]
         public async Task<IActionResult> ConfirmBooking(string bookingId)
         {
@@ -172,7 +199,7 @@ namespace EVChargingBackend.Controllers
 
 
         //Complete Booking
-        [Authorize(Roles = "StationOperator")]
+        [Authorize(Roles = "StationOperator,Backoffice")]
         [HttpPost("complete/{bookingId}")]
         public async Task<IActionResult> CompleteBooking(string bookingId)
         {
@@ -264,6 +291,98 @@ namespace EVChargingBackend.Controllers
             return Ok(bookings);
         }
 
+
+        // Reopen a canceled booking and re-book the associated slot if available
+        [Authorize(Roles = "Backoffice,EVOwner")]
+        [HttpPost("reopen/{bookingId}")]
+        public async Task<IActionResult> ReopenReservation(string bookingId)
+        {
+            try
+            {
+                var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+                if (booking == null) return NotFound("Booking not found");
+
+                if (!booking.Canceled) return BadRequest("Booking is not canceled.");
+
+                // Ensure reopen is allowed (in service we also validate timing)
+                var reopened = await _bookingService.ReopenReservationAsync(bookingId);
+
+                // If booking had a SlotId, attempt to re-book that slot
+                if (!string.IsNullOrEmpty(reopened.SlotId))
+                {
+                    var slot = await _slotService.GetSlotByIdAsync(reopened.SlotId);
+                    if (slot == null)
+                    {
+                        // Slot no longer exists; return reopened booking but with warning
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Associated slot no longer exists." });
+                    }
+
+                    if (slot.IsBooked)
+                    {
+                        // If slot is already booked, we cannot reassign. Return reopened booking with info.
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Associated slot is already booked by someone else." });
+                    }
+
+                    // Attempt to book the slot again for the same user
+                    var userId = reopened.UserId;
+                    var booked = await _slotService.BookSlotAsync(reopened.SlotId, userId, reopened.Id);
+                    if (!booked)
+                    {
+                        var responseWarn = _mapper.Map<BookingResponseDto>(reopened);
+                        return Ok(new { booking = responseWarn, warning = "Failed to book the associated slot." });
+                    }
+                }
+
+                var response = _mapper.Map<BookingResponseDto>(reopened);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Booking not found");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
+        // Approve a booking (Backoffice)
+        [Authorize(Roles = "Backoffice")]
+        [HttpPost("approve/{bookingId}")]
+        public async Task<IActionResult> ApproveReservation(string bookingId)
+        {
+            try
+            {
+                var booking = await _bookingService.GetReservationByIdAsync(bookingId);
+                if (booking == null) return NotFound("Booking not found");
+
+                if (booking.Canceled) return BadRequest("Cannot approve a canceled booking.");
+
+                var approved = await _bookingService.ApproveReservationAsync(bookingId);
+
+                // Optionally, you could auto-book the slot here if needed (slot booking is done at create time)
+                var response = _mapper.Map<BookingResponseDto>(approved);
+                return Ok(response);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Booking not found");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
 
     }
 
