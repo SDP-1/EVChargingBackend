@@ -39,12 +39,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+<<<<<<< HEAD
+
+            // Allow multiple issuers: localhost (for web/direct access) and the specific
+            // IP address (192.168.1.12) used by the Android emulator.
+            ValidIssuers = new[]
+            {
+                "http://localhost:5033",
+                "http://10.0.2.2:5033/"
+            },
+
+            ValidAudience = "http://localhost:3000",
+=======
             ValidIssuer = "http://localhost:5033",//  backend API runs on port 5000
             ValidAudience = "http://localhost:5173",// Assuming you plan to have your frontend running on port 3000 (common for React apps)
+>>>>>>> 3def76378347b373cb900c6ffa491450d29d36d1
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
 
         };
     });
+
 
 // Define the CORS Policy
 builder.Services.AddCors(options =>
